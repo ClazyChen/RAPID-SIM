@@ -1,5 +1,6 @@
 module;
 #include <cstddef>
+#include <iostream>
 
 export module rapid.Packet;
 
@@ -42,3 +43,11 @@ public:
 };
 
 int Packet::s_id { 0 };
+
+export std::ostream& operator<<(std::ostream& os, const Packet& pkt)
+{
+    os << "Packet { id: " << pkt.m_id << ", key: " << pkt.m_key << ", backward_tag_bitmap: " << static_cast<int>(pkt.m_backward_tag_bitmap) << ", write_back_bitmap: " << static_cast<int>(pkt.m_write_back_bitmap) << " }";
+    return os;
+}
+
+export int g_clock { 0 };

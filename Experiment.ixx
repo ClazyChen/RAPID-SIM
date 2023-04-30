@@ -5,6 +5,7 @@ module;
 export module rapid.experimental;
 
 export import rapid.experimental.RawPipeline;
+export import rapid.experimental.SinglePeer;
 
 import rapid.Packet;
 import rapid.Device;
@@ -20,17 +21,21 @@ class Experiment {
 
     void receive_packet(Packet&& pkt)
     {
+        ++g_clock;
         if (!pkt.is_empty()) {
+            //std::cout << g_clock << " I " << pkt << std::endl;
             ++m_rx_packet_count;
         }
         pkt = m_device.next(std::move(pkt));
         if (!pkt.is_empty()) {
+            //std::cout << g_clock << " O " << pkt << std::endl;
             ++m_tx_packet_count;
         }
     }
 
     int m_rx_packet_count { 0 };
     int m_tx_packet_count { 0 };
+    int m_target_count { 0 };
 
     void run_extra_cycles()
     {
@@ -40,10 +45,19 @@ class Experiment {
     }
 
 public:
-    Experiment() = default;
+    Experiment() 
+    {
+        m_device.initialize();
+    }
     Experiment(double lambda, double alpha = 1.0)
         : m_packet_generator(lambda, alpha)
     {
+        m_device.initialize();
+    }
+
+    void initialize_write_back_generator(std::initializer_list<std::pair<int, double>> l)
+    {
+        m_packet_generator.initialize_write_back_generator(l);
     }
 
     void run(int cycle_count)
@@ -56,6 +70,7 @@ public:
 
     void run_until(int packet_count)
     {
+        m_target_count = packet_count;
         while (m_rx_packet_count < packet_count) {
             receive_packet(m_packet_generator.next());
         }

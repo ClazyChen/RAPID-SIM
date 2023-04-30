@@ -1,5 +1,6 @@
 module;
 #include <bitset>
+#include <iostream>
 
 export module rapid.Piw;
 
@@ -22,7 +23,7 @@ public:
 
     void cancel_dirty_step(short key)
     {
-        m_cancel_dirty.enqueue(key);
+        m_cancel_dirty.enqueue(std::move(key));
         m_dirty_cam.reset(m_cancel_dirty.next());
     }
 
@@ -30,13 +31,14 @@ public:
     {
         Packet bp { m_backward_packet.next() };
         Packet wb { m_write_back_packet.next() };
-        if (m_dirty_cam.test(pkt.m_key)) {
+        if (!pkt.is_empty() && m_dirty_cam.test(pkt.m_key)) {
             pkt.set_backward_tag(m_peer_mask);
             m_backward_packet.enqueue(std::move(pkt));
             return { Packet {}, bp, wb };
         } else {
             Packet pipe { pkt };
             if (pkt.is_write_back_packet(m_peer_mask)) {
+                m_dirty_cam.set(pkt.m_key);
                 m_write_back_packet.enqueue(std::move(pkt));
             }
             return { pipe, bp, wb };

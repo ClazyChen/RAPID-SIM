@@ -1,4 +1,5 @@
 module;
+#include <iostream>
 #include <array>
 
 export module rapid.PacketQueue;

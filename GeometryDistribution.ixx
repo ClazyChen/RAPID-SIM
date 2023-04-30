@@ -19,7 +19,11 @@ public:
 
     int next()
     {
-        double x { m_distribution(m_engine) };
-        return std::ceil(std::log(1 - x) / std::log(1 - m_lambda));
+        if (m_lambda == 1.0) {
+            return 1;
+        } else {
+            double x { m_distribution(m_engine) };
+            return static_cast<int>(std::ceil(std::log(1 - x) / std::log(1 - m_lambda)));
+        }
     }
 };

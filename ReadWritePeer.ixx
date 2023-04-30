@@ -42,7 +42,8 @@ public:
     ReadWritePeer() = default;
     Packet next1(Packet&& pir) override
     {
-        auto vp_in = m_front_scheduler.next(std::move(pir), std::move(temp_backward_packet));
+        auto [vp_in, key] = m_front_scheduler.next(std::move(pir), std::move(temp_backward_packet));
+        m_pir.count_backward_packet(key);
         auto vp_out = m_fb_pir.next(std::move(vp_in));
         m_pir.write_cam(std::move(temp_write_back_packet));
         auto [pir_out, cd] = m_pir.next(std::move(vp_out));

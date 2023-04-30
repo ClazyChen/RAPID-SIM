@@ -2,6 +2,7 @@ module;
 #include <array>
 #include <memory>
 #include <vector>
+#include <iostream>
 
 export module rapid.Pipeline;
 
@@ -33,8 +34,10 @@ public:
             if (IType == DeviceType::Read && OType == DeviceType::Write) {
                 return std::make_unique<VirtualPipeline<PIPELINE_LENGTH<DeviceType::Read, DeviceType::Write>(0, PROC_NUM)>>();
             }
-            if (IType == DeviceType::Write && OType == DeviceType::Read && PROC_NUM > 1) {
-                return std::make_unique<VirtualPipeline<PIPELINE_LENGTH<DeviceType::Write, DeviceType::Write>(0, PROC_NUM)>>();
+            if constexpr (PROC_NUM > 1) {
+                if (IType == DeviceType::Write && OType == DeviceType::Read) {
+                    return std::make_unique<VirtualPipeline<PIPELINE_LENGTH<DeviceType::Write, DeviceType::Read>(0, PROC_NUM)>>();
+                }
             }
             if (IType == DeviceType::Read && OType == DeviceType::Read) {
                 return std::make_unique<VirtualPipeline<PIPELINE_LENGTH<DeviceType::Read, DeviceType::Read>(0, PROC_NUM)>>();
@@ -102,7 +105,7 @@ protected:
     template <size_t RID, size_t WID, size_t EXPLICIT_CLOCK_MAX = 0>
     void add_read_write_peer()
     {
-        auto peer { std::make_unique<ReadWritePeer<RID, WID, N, K, EXPLICIT_CLOCK_MAX>>() };
+        std::unique_ptr<DualPortDevice> peer { std::make_unique<ReadWritePeer<RID, WID, N, K, EXPLICIT_CLOCK_MAX>>() };
         auto read_device { std::make_unique<VirtualDevice<DeviceType::Read>>(peer) };
         auto write_device { std::make_unique<VirtualDevice<DeviceType::Write>>(peer) };
         m_proc_status.at(RID).m_device_id_as_pir = m_devices.size();
@@ -122,6 +125,7 @@ public:
         m_devices.push_back(nullptr);
         this->initialize_peers();
         build_pipeline();
+        // std::cout << m_pipeline.size() << std::endl;
     }
 
     Packet next(Packet&& pkt) override

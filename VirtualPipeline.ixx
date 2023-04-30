@@ -1,4 +1,5 @@
 module;
+#include <iostream>
 #include <utility>
 
 export module rapid.VirtualPipeline;
@@ -15,7 +16,9 @@ class VirtualPipeline : public Device {
     BlockQueue<Packet, m_length> m_queue;
 
 public:
-    VirtualPipeline() = default;
+    VirtualPipeline() {
+        //std::cout << "create virtual pipeline len = " << m_length << std::endl;
+    }
     Packet next(Packet&& pkt) override
     {
         m_queue.enqueue(std::move(pkt));

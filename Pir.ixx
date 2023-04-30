@@ -2,6 +2,8 @@ module;
 #include <array>
 #include <bitset>
 
+#include <iostream>
+
 export module rapid.Pir;
 
 import rapid.Packet;
@@ -21,13 +23,13 @@ class Pir {
     std::array<PacketQueue<N>, K> m_buffer;
     int m_buffer_size { 0 };
 
-    int m_round_robin { 0 };
+    int m_round_robin { 1 };
     void round_robin_step()
     {
         if constexpr (K > 2) {
             for (int next { m_round_robin + 1 }; next != m_round_robin; ++next) {
                 if (next == K) {
-                    next = 0;
+                    next = 1;
                 }
                 if (m_schedule_cam.test(next)) {
                     m_round_robin = next;
@@ -52,6 +54,8 @@ class Pir {
                     m_schedule_cam.set(key);
                 }
             }
+            //std::cout << "timeout = " << key << std::endl;
+            //std::cout << "fbs     = " << m_front_buffer_size.at(key) << std::endl;
         }
         return key;
     }
@@ -74,6 +78,7 @@ class Pir {
     {
         if (m_buffer_size < N) {
             ++m_buffer_size;
+            //std::cout << "enqueue - " << pkt << std::endl;
             m_buffer.at(pkt.m_key).enqueue(std::move(pkt));
         } else {
             ++m_drop_packet_count;
@@ -94,9 +99,18 @@ public:
 
     void write_cam(Packet&& pkt)
     {
-        m_dirty_cam.set(pkt.m_key);
-        m_stateful_ram[pkt.m_key] = pkt.m_id;
-        m_block_queue.enqueue(pkt.m_key);
+        if (!pkt.is_empty()) {
+            m_dirty_cam.set(pkt.m_key);
+            m_stateful_ram[pkt.m_key] = pkt.m_id;
+            m_block_queue.enqueue(std::move(pkt.m_key));
+            //std::cout << "write " << pkt.m_id << std::endl;
+        }
+    }
+
+    void count_backward_packet(short key) {
+        if (key != 0) {
+            ++m_front_buffer_size.at(key);
+        }
     }
 
     std::pair<Packet, short> next(Packet&& pkt)

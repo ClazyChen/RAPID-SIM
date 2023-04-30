@@ -33,7 +33,9 @@
     <ClCompile Include="RapidSimulator.cpp" />
     <ClCompile Include="RawPipeline.ixx" />
     <ClCompile Include="ReadWritePeer.ixx" />
+    <ClCompile Include="SinglePeer.ixx" />
     <ClCompile Include="VirtualPipeline.ixx" />
+    <ClCompile Include="WriteBackGenerator.ixx" />
     <ClCompile Include="ZipfDistribution.ixx" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
