@@ -1,0 +1,71 @@
+module;
+#include <format>
+#include <iostream>
+
+export module rapid.experimental;
+
+export import rapid.experimental.RawPipeline;
+
+import rapid.Packet;
+import rapid.Device;
+import rapid.PacketGenerator;
+
+export template <typename DeviceType, size_t K = 2>
+    requires std::is_base_of_v<Device, DeviceType>
+class Experiment {
+    constexpr const static int m_extra_cycle_count = 2000;
+
+    PacketGenerator<K> m_packet_generator;
+    DeviceType m_device;
+
+    void receive_packet(Packet&& pkt)
+    {
+        if (!pkt.is_empty()) {
+            ++m_rx_packet_count;
+        }
+        pkt = m_device.next(std::move(pkt));
+        if (!pkt.is_empty()) {
+            ++m_tx_packet_count;
+        }
+    }
+
+    int m_rx_packet_count { 0 };
+    int m_tx_packet_count { 0 };
+
+    void run_extra_cycles()
+    {
+        for (int i { 0 }; i < m_extra_cycle_count; ++i) {
+            receive_packet(Packet {});
+        }
+    }
+
+public:
+    Experiment() = default;
+    Experiment(double lambda, double alpha = 1.0)
+        : m_packet_generator(lambda, alpha)
+    {
+    }
+
+    void run(int cycle_count)
+    {
+        for (int i { 0 }; i < cycle_count; ++i) {
+            receive_packet(m_packet_generator.next());
+        }
+        run_extra_cycles();
+    }
+
+    void run_until(int packet_count)
+    {
+        while (m_rx_packet_count < packet_count) {
+            receive_packet(m_packet_generator.next());
+        }
+        run_extra_cycles();
+    }
+
+    void report(std::ostream& os)
+    {
+        os << std::format("Recv Pkt = {}", m_rx_packet_count) << std::endl;
+        os << std::format("Send Pkt = {}", m_tx_packet_count) << std::endl;
+        os << std::format("Drop  %  = {:.8f}", static_cast<double>(m_rx_packet_count - m_tx_packet_count) / m_rx_packet_count) << std::endl;
+    }
+};
