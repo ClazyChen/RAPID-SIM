@@ -24,22 +24,43 @@ class Pir {
     int m_buffer_size { 0 };
 
     int m_round_robin { 1 };
+    int m_schedule_count { 0 };
+
     void round_robin_step()
     {
         if constexpr (K > 2) {
-            for (int next { m_round_robin + 1 }; next != m_round_robin; ++next) {
-                if (next == K) {
-                    next = 1;
-                }
-                if (m_schedule_cam.test(next)) {
-                    m_round_robin = next;
-                    return;
+            if (m_schedule_count > 1) {
+                for (int next { m_round_robin + 1 };; ++next) {
+                    if (next == K) {
+                        next = 1;
+                    }
+                    if (m_schedule_cam.test(next)) {
+                        m_round_robin = next;
+                        //std::cout << "round robin = " << m_round_robin << std::endl;
+                        return;
+                    }
+                    if (next == m_round_robin) {
+                        break;
+                    }
                 }
             }
         }
     }
 
     BlockQueue<short, m_clock_max> m_block_queue;
+
+    void ready_to_schedule(short key) {
+        //std::cout << "READY SCH " << key << std::endl;
+        if (++m_schedule_count == 1) {
+            m_round_robin = key;
+        }
+        m_schedule_cam.set(key);
+    }
+
+    void complete_schedule(short key) {
+        --m_schedule_count;
+        m_schedule_cam.reset(key);
+    }
 
     short timeout()
     {
@@ -51,7 +72,7 @@ class Pir {
                 if (m_front_buffer_size.at(key) > 0) {
                     m_suspend_cam.set(key);
                 } else {
-                    m_schedule_cam.set(key);
+                    ready_to_schedule(key);
                 }
             }
             //std::cout << "timeout = " << key << std::endl;
@@ -62,12 +83,17 @@ class Pir {
 
     Packet schedule()
     {
+        if (!m_schedule_cam.test(m_round_robin)) {
+            return Packet {};
+        }
         auto pkt { m_buffer.at(m_round_robin).dequeue() };
         if (!pkt.is_empty()) {
             --m_buffer_size;
+            //std::cout << "DEQUEUE " << g_clock << " : " << pkt << std::endl;
             if (m_buffer.at(m_round_robin).is_empty()) {
                 m_dirty_cam.reset(m_round_robin);
-                m_schedule_cam.reset(m_round_robin);
+                complete_schedule(m_round_robin);
+                //std::cout << "COMPLETE " << m_round_robin << std::endl;
             }
             round_robin_step();
         }
@@ -78,15 +104,16 @@ class Pir {
     {
         if (m_buffer_size < N) {
             ++m_buffer_size;
-            //std::cout << "enqueue - " << pkt << std::endl;
+            //std::cout << "enqueue " << g_clock << " : " << pkt << std::endl;
             m_buffer.at(pkt.m_key).enqueue(std::move(pkt));
         } else {
+            std::cout << "drop " << g_clock << " : " << pkt << std::endl;
             ++m_drop_packet_count;
         }
         if (pkt.is_backward_packet(m_dest_mask)) {
             if (--m_front_buffer_size.at(pkt.m_key) == 0 && m_suspend_cam.test(pkt.m_key)) {
                 m_suspend_cam.reset(pkt.m_key);
-                m_schedule_cam.set(pkt.m_key);
+                ready_to_schedule(pkt.m_key);
             }
         }
         return Packet {};
@@ -119,7 +146,7 @@ public:
         if (pkt.is_empty()) {
             return { schedule(), key };
         } else {
-            if (pkt.is_backward_packet(m_dest_mask)) {
+            if (m_dirty_cam.test(pkt.m_key)) {
                 return { enqueue(std::move(pkt)), key };
             } else {
                 return { pkt, key };

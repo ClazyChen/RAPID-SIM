@@ -23,6 +23,7 @@ public:
             if (!m_queue.enqueue(std::move(backward_packet))) {
                 ++m_drop_packet_count;
                 backward_key = 0;
+                std::cout << "back-drop " << backward_packet << std::endl;
             } else {
                 //std::cout << "backward: " << backward_packet << std::endl;
             }

@@ -6,6 +6,7 @@ export module rapid.experimental;
 
 export import rapid.experimental.RawPipeline;
 export import rapid.experimental.SinglePeer;
+export import rapid.experimental.OverlapPeer;
 
 import rapid.Packet;
 import rapid.Device;

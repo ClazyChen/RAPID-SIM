@@ -1,4 +1,5 @@
 module;
+#include <iostream>
 #include <algorithm>
 #include <cmath>
 #include <numeric>
@@ -23,6 +24,10 @@ export template <size_t K = 2> class ZipfDistribution {
             m_probabilities.at(i) = 1.0 / std::pow(i + 1, m_alpha);
         }
         m_sum = std::reduce(m_probabilities.begin(), m_probabilities.end(), 0.0);
+        for (size_t i{ 1 }; i < m_flow_count; ++i) {
+            m_probabilities.at(i) += m_probabilities.at(i - 1);
+        }
+        m_probabilities.at(m_flow_count - 1) = m_sum;
         m_distribution = std::uniform_real_distribution<>(0.0, m_sum);
     }
 
@@ -40,7 +45,8 @@ public:
     short next()
     {
         double x { m_distribution(m_engine) };
-        auto it = std::lower_bound(m_probabilities.begin(), m_probabilities.end(), x);
-        return static_cast<short>(it - m_probabilities.begin() + 1);
+        auto it { std::lower_bound(m_probabilities.begin(), m_probabilities.end(), x) };
+        auto res { static_cast<short>(it - m_probabilities.begin() + 1) };
+        return res;
     }
 };
