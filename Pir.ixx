@@ -25,11 +25,11 @@ class Pir {
     int m_buffer_size { 0 };
 
     RoundRobinQueue<K> m_schedule_queue;
-    BlockQueue<short, m_clock_max> m_block_queue;
+    BlockQueue<unsigned short, m_clock_max> m_block_queue;
 
-    short m_scheduling_key { 0 };
+    unsigned short m_scheduling_key { 0 };
 
-    void ready_to_schedule(short key)
+    void ready_to_schedule(unsigned short key)
     {
         if constexpr (OUTPUT) {
             std::cout << "[ " << static_cast<int>(DEST_MASK) << " ]";
@@ -40,7 +40,7 @@ class Pir {
         m_scheduling_key = key;
     }
 
-    void complete_schedule(short key)
+    void complete_schedule(unsigned short key)
     {
         if constexpr (OUTPUT) {
             std::cout << "[ " << static_cast<int>(DEST_MASK) << " ]";
@@ -49,9 +49,9 @@ class Pir {
         m_schedule_cam.reset(key);
     }
 
-    short timeout()
+    unsigned short timeout()
     {
-        short key { m_block_queue.next() };
+        unsigned short key { m_block_queue.next() };
         if (key != 0) {
             if (m_front_buffer_size.at(key) > 0) {
                 m_suspend_cam.set(key);
@@ -134,23 +134,23 @@ public:
         }
     }
 
-    void count_backward_packet(short key)
+    void count_backward_packet(unsigned short key)
     {
         if (key != 0) {
             ++m_front_buffer_size.at(key);
         }
     }
 
-    short get_scheduling_key()
+    unsigned short get_scheduling_key()
     {
-        short key { m_scheduling_key };
+        unsigned short key { m_scheduling_key };
         m_scheduling_key = 0;
         return key;
     }
 
     std::pair<Packet, short> next(Packet&& pkt)
     {
-        short key { timeout() };
+        unsigned short key { timeout() };
         if (pkt.is_empty()) {
             return { schedule(), key };
         } else {

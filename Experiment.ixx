@@ -15,7 +15,7 @@ import rapid.PacketGenerator;
 export template <typename DeviceType, size_t K = 2>
     requires std::is_base_of_v<Device, DeviceType>
 class Experiment {
-    constexpr const static int m_extra_cycle_count = 2000;
+    constexpr const static int m_extra_cycle_count = 8000;
 
     PacketGenerator<K> m_packet_generator;
     DeviceType m_device;
@@ -56,6 +56,10 @@ public:
         m_device.initialize();
     }
 
+    void set_lambda(double lambda) {
+        m_packet_generator.set_lambda(lambda);
+    }
+
     void initialize_write_back_generator(std::initializer_list<std::pair<int, double>> l)
     {
         m_packet_generator.initialize_write_back_generator(l);
@@ -82,6 +86,12 @@ public:
     {
         os << std::format("Recv Pkt = {}", m_rx_packet_count) << std::endl;
         os << std::format("Send Pkt = {}", m_tx_packet_count) << std::endl;
-        os << std::format("Drop  %  = {:.8f}", static_cast<double>(m_rx_packet_count - m_tx_packet_count) / m_rx_packet_count) << std::endl;
+        os << std::format("Drop  %  = {:.6f}", static_cast<double>(m_rx_packet_count - m_tx_packet_count) / m_rx_packet_count) << std::endl;
+    }
+
+    void reset() {
+        m_rx_packet_count = 0;
+        m_tx_packet_count = 0;
+        m_target_count = 0;
     }
 };

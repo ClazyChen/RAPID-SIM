@@ -1,0 +1,360 @@
+ lambda = 0.1 ; write_back_ratio = 0.1
+Recv Pkt = 1000
+Send Pkt = 1000
+Drop  %  = 0.000000
+ lambda = 0.1 ; write_back_ratio = 0.2
+Recv Pkt = 1000
+Send Pkt = 1000
+Drop  %  = 0.000000
+ lambda = 0.1 ; write_back_ratio = 0.3
+Recv Pkt = 1000
+Send Pkt = 1000
+Drop  %  = 0.000000
+ lambda = 0.1 ; write_back_ratio = 0.4
+Recv Pkt = 1000
+Send Pkt = 1000
+Drop  %  = 0.000000
+ lambda = 0.1 ; write_back_ratio = 0.5
+Recv Pkt = 1000
+Send Pkt = 1000
+Drop  %  = 0.000000
+ lambda = 0.1 ; write_back_ratio = 0.6
+Recv Pkt = 1000
+Send Pkt = 1000
+Drop  %  = 0.000000
+ lambda = 0.1 ; write_back_ratio = 0.7
+Recv Pkt = 1000
+Send Pkt = 1000
+Drop  %  = 0.000000
+ lambda = 0.1 ; write_back_ratio = 0.8
+Recv Pkt = 1000
+Send Pkt = 1000
+Drop  %  = 0.000000
+ lambda = 0.1 ; write_back_ratio = 0.9
+Recv Pkt = 1000
+Send Pkt = 937
+Drop  %  = 0.063000
+ lambda = 0.1 ; write_back_ratio = 1
+Recv Pkt = 1000
+Send Pkt = 871
+Drop  %  = 0.129000
+ lambda = 0.2 ; write_back_ratio = 0.1
+Recv Pkt = 1000
+Send Pkt = 917
+Drop  %  = 0.083000
+ lambda = 0.2 ; write_back_ratio = 0.2
+Recv Pkt = 1000
+Send Pkt = 910
+Drop  %  = 0.090000
+ lambda = 0.2 ; write_back_ratio = 0.3
+Recv Pkt = 1000
+Send Pkt = 901
+Drop  %  = 0.099000
+ lambda = 0.2 ; write_back_ratio = 0.4
+Recv Pkt = 1000
+Send Pkt = 920
+Drop  %  = 0.080000
+ lambda = 0.2 ; write_back_ratio = 0.5
+Recv Pkt = 1000
+Send Pkt = 865
+Drop  %  = 0.135000
+ lambda = 0.2 ; write_back_ratio = 0.6
+Recv Pkt = 1000
+Send Pkt = 880
+Drop  %  = 0.120000
+ lambda = 0.2 ; write_back_ratio = 0.7
+Recv Pkt = 1000
+Send Pkt = 861
+Drop  %  = 0.139000
+ lambda = 0.2 ; write_back_ratio = 0.8
+Recv Pkt = 1000
+Send Pkt = 843
+Drop  %  = 0.157000
+ lambda = 0.2 ; write_back_ratio = 0.9
+Recv Pkt = 1000
+Send Pkt = 839
+Drop  %  = 0.161000
+ lambda = 0.2 ; write_back_ratio = 1
+Recv Pkt = 1000
+Send Pkt = 844
+Drop  %  = 0.156000
+ lambda = 0.3 ; write_back_ratio = 0.1
+Recv Pkt = 1000
+Send Pkt = 911
+Drop  %  = 0.089000
+ lambda = 0.3 ; write_back_ratio = 0.2
+Recv Pkt = 1000
+Send Pkt = 910
+Drop  %  = 0.090000
+ lambda = 0.3 ; write_back_ratio = 0.3
+Recv Pkt = 1000
+Send Pkt = 891
+Drop  %  = 0.109000
+ lambda = 0.3 ; write_back_ratio = 0.4
+Recv Pkt = 1000
+Send Pkt = 881
+Drop  %  = 0.119000
+ lambda = 0.3 ; write_back_ratio = 0.5
+Recv Pkt = 1000
+Send Pkt = 858
+Drop  %  = 0.142000
+ lambda = 0.3 ; write_back_ratio = 0.6
+Recv Pkt = 1000
+Send Pkt = 839
+Drop  %  = 0.161000
+ lambda = 0.3 ; write_back_ratio = 0.7
+Recv Pkt = 1000
+Send Pkt = 826
+Drop  %  = 0.174000
+ lambda = 0.3 ; write_back_ratio = 0.8
+Recv Pkt = 1000
+Send Pkt = 830
+Drop  %  = 0.170000
+ lambda = 0.3 ; write_back_ratio = 0.9
+Recv Pkt = 1000
+Send Pkt = 828
+Drop  %  = 0.172000
+ lambda = 0.3 ; write_back_ratio = 1
+Recv Pkt = 1000
+Send Pkt = 795
+Drop  %  = 0.205000
+ lambda = 0.4 ; write_back_ratio = 0.1
+Recv Pkt = 1000
+Send Pkt = 896
+Drop  %  = 0.104000
+ lambda = 0.4 ; write_back_ratio = 0.2
+Recv Pkt = 1000
+Send Pkt = 888
+Drop  %  = 0.112000
+ lambda = 0.4 ; write_back_ratio = 0.3
+Recv Pkt = 1000
+Send Pkt = 901
+Drop  %  = 0.099000
+ lambda = 0.4 ; write_back_ratio = 0.4
+Recv Pkt = 1000
+Send Pkt = 862
+Drop  %  = 0.138000
+ lambda = 0.4 ; write_back_ratio = 0.5
+Recv Pkt = 1000
+Send Pkt = 858
+Drop  %  = 0.142000
+ lambda = 0.4 ; write_back_ratio = 0.6
+Recv Pkt = 1000
+Send Pkt = 851
+Drop  %  = 0.149000
+ lambda = 0.4 ; write_back_ratio = 0.7
+Recv Pkt = 1000
+Send Pkt = 841
+Drop  %  = 0.159000
+ lambda = 0.4 ; write_back_ratio = 0.8
+Recv Pkt = 1000
+Send Pkt = 841
+Drop  %  = 0.159000
+ lambda = 0.4 ; write_back_ratio = 0.9
+Recv Pkt = 1000
+Send Pkt = 819
+Drop  %  = 0.181000
+ lambda = 0.4 ; write_back_ratio = 1
+Recv Pkt = 1000
+Send Pkt = 791
+Drop  %  = 0.209000
+ lambda = 0.5 ; write_back_ratio = 0.1
+Recv Pkt = 1000
+Send Pkt = 896
+Drop  %  = 0.104000
+ lambda = 0.5 ; write_back_ratio = 0.2
+Recv Pkt = 1000
+Send Pkt = 868
+Drop  %  = 0.132000
+ lambda = 0.5 ; write_back_ratio = 0.3
+Recv Pkt = 1000
+Send Pkt = 873
+Drop  %  = 0.127000
+ lambda = 0.5 ; write_back_ratio = 0.4
+Recv Pkt = 1000
+Send Pkt = 871
+Drop  %  = 0.129000
+ lambda = 0.5 ; write_back_ratio = 0.5
+Recv Pkt = 1000
+Send Pkt = 843
+Drop  %  = 0.157000
+ lambda = 0.5 ; write_back_ratio = 0.6
+Recv Pkt = 1000
+Send Pkt = 834
+Drop  %  = 0.166000
+ lambda = 0.5 ; write_back_ratio = 0.7
+Recv Pkt = 1000
+Send Pkt = 774
+Drop  %  = 0.226000
+ lambda = 0.5 ; write_back_ratio = 0.8
+Recv Pkt = 1000
+Send Pkt = 795
+Drop  %  = 0.205000
+ lambda = 0.5 ; write_back_ratio = 0.9
+Recv Pkt = 1000
+Send Pkt = 768
+Drop  %  = 0.232000
+ lambda = 0.5 ; write_back_ratio = 1
+Recv Pkt = 1000
+Send Pkt = 793
+Drop  %  = 0.207000
+ lambda = 0.6 ; write_back_ratio = 0.1
+Recv Pkt = 1000
+Send Pkt = 883
+Drop  %  = 0.117000
+ lambda = 0.6 ; write_back_ratio = 0.2
+Recv Pkt = 1000
+Send Pkt = 897
+Drop  %  = 0.103000
+ lambda = 0.6 ; write_back_ratio = 0.3
+Recv Pkt = 1000
+Send Pkt = 873
+Drop  %  = 0.127000
+ lambda = 0.6 ; write_back_ratio = 0.4
+Recv Pkt = 1000
+Send Pkt = 858
+Drop  %  = 0.142000
+ lambda = 0.6 ; write_back_ratio = 0.5
+Recv Pkt = 1000
+Send Pkt = 836
+Drop  %  = 0.164000
+ lambda = 0.6 ; write_back_ratio = 0.6
+Recv Pkt = 1000
+Send Pkt = 824
+Drop  %  = 0.176000
+ lambda = 0.6 ; write_back_ratio = 0.7
+Recv Pkt = 1000
+Send Pkt = 798
+Drop  %  = 0.202000
+ lambda = 0.6 ; write_back_ratio = 0.8
+Recv Pkt = 1000
+Send Pkt = 792
+Drop  %  = 0.208000
+ lambda = 0.6 ; write_back_ratio = 0.9
+Recv Pkt = 1000
+Send Pkt = 809
+Drop  %  = 0.191000
+ lambda = 0.6 ; write_back_ratio = 1
+Recv Pkt = 1000
+Send Pkt = 779
+Drop  %  = 0.221000
+ lambda = 0.7 ; write_back_ratio = 0.1
+Recv Pkt = 1000
+Send Pkt = 894
+Drop  %  = 0.106000
+ lambda = 0.7 ; write_back_ratio = 0.2
+Recv Pkt = 1000
+Send Pkt = 871
+Drop  %  = 0.129000
+ lambda = 0.7 ; write_back_ratio = 0.3
+Recv Pkt = 1000
+Send Pkt = 850
+Drop  %  = 0.150000
+ lambda = 0.7 ; write_back_ratio = 0.4
+Recv Pkt = 1000
+Send Pkt = 832
+Drop  %  = 0.168000
+ lambda = 0.7 ; write_back_ratio = 0.5
+Recv Pkt = 1000
+Send Pkt = 833
+Drop  %  = 0.167000
+ lambda = 0.7 ; write_back_ratio = 0.6
+Recv Pkt = 1000
+Send Pkt = 811
+Drop  %  = 0.189000
+ lambda = 0.7 ; write_back_ratio = 0.7
+Recv Pkt = 1000
+Send Pkt = 794
+Drop  %  = 0.206000
+ lambda = 0.7 ; write_back_ratio = 0.8
+Recv Pkt = 1000
+Send Pkt = 772
+Drop  %  = 0.228000
+ lambda = 0.7 ; write_back_ratio = 0.9
+Recv Pkt = 1000
+Send Pkt = 755
+Drop  %  = 0.245000
+ lambda = 0.7 ; write_back_ratio = 1
+Recv Pkt = 1000
+Send Pkt = 746
+Drop  %  = 0.254000
+ lambda = 0.8 ; write_back_ratio = 0.1
+Recv Pkt = 1000
+Send Pkt = 893
+Drop  %  = 0.107000
+ lambda = 0.8 ; write_back_ratio = 0.2
+Recv Pkt = 1000
+Send Pkt = 877
+Drop  %  = 0.123000
+ lambda = 0.8 ; write_back_ratio = 0.3
+Recv Pkt = 1000
+Send Pkt = 867
+Drop  %  = 0.133000
+ lambda = 0.8 ; write_back_ratio = 0.4
+Recv Pkt = 1000
+Send Pkt = 836
+Drop  %  = 0.164000
+ lambda = 0.8 ; write_back_ratio = 0.5
+Recv Pkt = 1000
+Send Pkt = 790
+Drop  %  = 0.210000
+ lambda = 0.8 ; write_back_ratio = 0.6
+Recv Pkt = 1000
+Send Pkt = 797
+Drop  %  = 0.203000
+ lambda = 0.8 ; write_back_ratio = 0.7
+Recv Pkt = 1000
+Send Pkt = 769
+Drop  %  = 0.231000
+ lambda = 0.8 ; write_back_ratio = 0.8
+Recv Pkt = 1000
+Send Pkt = 778
+Drop  %  = 0.222000
+ lambda = 0.8 ; write_back_ratio = 0.9
+Recv Pkt = 1000
+Send Pkt = 772
+Drop  %  = 0.228000
+ lambda = 0.8 ; write_back_ratio = 1
+Recv Pkt = 1000
+Send Pkt = 729
+Drop  %  = 0.271000
+ lambda = 0.9 ; write_back_ratio = 0.1
+Recv Pkt = 1000
+Send Pkt = 868
+Drop  %  = 0.132000
+ lambda = 0.9 ; write_back_ratio = 0.2
+Recv Pkt = 1000
+Send Pkt = 838
+Drop  %  = 0.162000
+ lambda = 0.9 ; write_back_ratio = 0.3
+Recv Pkt = 1000
+Send Pkt = 828
+Drop  %  = 0.172000
+ lambda = 0.9 ; write_back_ratio = 0.4
+Recv Pkt = 1000
+Send Pkt = 815
+Drop  %  = 0.185000
+ lambda = 0.9 ; write_back_ratio = 0.5
+Recv Pkt = 1000
+Send Pkt = 803
+Drop  %  = 0.197000
+ lambda = 0.9 ; write_back_ratio = 0.6
+Recv Pkt = 1000
+Send Pkt = 794
+Drop  %  = 0.206000
+ lambda = 0.9 ; write_back_ratio = 0.7
+Recv Pkt = 1000
+Send Pkt = 751
+Drop  %  = 0.249000
+ lambda = 0.9 ; write_back_ratio = 0.8
+Recv Pkt = 1000
+Send Pkt = 770
+Drop  %  = 0.230000
+ lambda = 0.9 ; write_back_ratio = 0.9
+Recv Pkt = 1000
+Send Pkt = 727
+Drop  %  = 0.273000
+ lambda = 0.9 ; write_back_ratio = 1
+Recv Pkt = 1000
+Send Pkt = 766
+Drop  %  = 0.234000

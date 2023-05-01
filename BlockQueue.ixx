@@ -10,8 +10,8 @@ export template <typename T, size_t Len>
 class BlockQueue {
     constexpr const static short m_length { Len };
     constexpr const static short m_timers_size { Len + 1 };
-    short m_clock_max { 0 };
-    short m_clock { 0 };
+    unsigned short m_clock_max { 0 };
+    unsigned short m_clock { 0 };
     std::array<T, m_timers_size> m_timers;
 
 public:

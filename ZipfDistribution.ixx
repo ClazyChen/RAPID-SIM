@@ -42,11 +42,11 @@ public:
         initialize();
     }
 
-    short next()
+    unsigned short next()
     {
         double x { m_distribution(m_engine) };
         auto it { std::lower_bound(m_probabilities.begin(), m_probabilities.end(), x) };
-        auto res { static_cast<short>(it - m_probabilities.begin() + 1) };
+        auto res { static_cast<unsigned short>(it - m_probabilities.begin() + 1) };
         return res;
     }
 };

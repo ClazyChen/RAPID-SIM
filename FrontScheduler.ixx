@@ -16,9 +16,9 @@ public:
 
     FrontScheduler() = default;
 
-    std::pair<Packet, short> next(Packet&& pipeline_packet, Packet&& backward_packet)
+    std::pair<Packet, unsigned short> next(Packet&& pipeline_packet, Packet&& backward_packet)
     {
-        short backward_key { backward_packet.m_key };
+        unsigned short backward_key { backward_packet.m_key };
         if (!backward_packet.is_empty()) {
             if (!m_queue.enqueue(std::move(backward_packet))) {
                 ++m_drop_packet_count;

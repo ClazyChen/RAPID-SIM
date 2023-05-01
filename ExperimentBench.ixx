@@ -1,0 +1,28 @@
+module;
+#include <iostream>
+
+export module rapid.experimental.bench;
+
+import rapid.experimental;
+
+export template <size_t RID1, size_t WID1, size_t RID2, size_t WID2, size_t EXPLICIT_CLOCK_MAX>
+class ExperimentBench {
+    Experiment<OverlapPeer<64, RID1, WID1, RID2, WID2, EXPLICIT_CLOCK_MAX, 32769, 8>, 32769> m_experiment;
+
+public:
+    ExperimentBench() = default;
+
+    void run_all(std::ostream& os, int packet_number) {
+        for (double lambda{ 0.1 }; lambda <= 0.9 + 1e-8; lambda += 0.1) {
+            for (double write_back_ratio{ 0.1 }; write_back_ratio <= 1.0 + 1e-8; write_back_ratio += 0.1) {
+                std::cout << "lambda = " << lambda << " ; write_back_ratio = " << write_back_ratio << std::endl;
+                os << " lambda = " << lambda << " ; write_back_ratio = " << write_back_ratio << std::endl;
+                m_experiment.set_lambda(lambda);
+                m_experiment.initialize_write_back_generator({ { 0, write_back_ratio }, { 1, write_back_ratio } });
+                m_experiment.reset();
+                m_experiment.run_until(packet_number);
+                m_experiment.report(os);
+            }
+        }
+    }
+};

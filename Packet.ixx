@@ -9,16 +9,16 @@ export class Packet {
 
 public:
     int m_id { 0 };
-    short m_key { 0 };
+    unsigned short m_key { 0 };
     std::byte m_backward_tag_bitmap { 0 };
     std::byte m_write_back_bitmap { 0 };
     Packet() = default;
-    Packet(short key)
+    Packet(unsigned short key)
         : m_id(++s_id)
         , m_key(key)
     {
     }
-    Packet(short key, std::byte write_back_bitmap)
+    Packet(unsigned short key, std::byte write_back_bitmap)
         : m_id(++s_id)
         , m_key(key)
         , m_write_back_bitmap(write_back_bitmap)

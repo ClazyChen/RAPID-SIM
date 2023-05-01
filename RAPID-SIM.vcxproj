@@ -22,6 +22,7 @@
     <ClCompile Include="BlockQueue.ixx" />
     <ClCompile Include="Device.ixx" />
     <ClCompile Include="Experiment.ixx" />
+    <ClCompile Include="ExperimentBench.ixx" />
     <ClCompile Include="FrontScheduler.ixx" />
     <ClCompile Include="GeometryDistribution.ixx" />
     <ClCompile Include="OverlapPeer.ixx" />

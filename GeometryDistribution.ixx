@@ -17,6 +17,8 @@ public:
     {
     }
 
+    void set_lambda(double lambda) { m_lambda = lambda; }
+
     int next()
     {
         if (m_lambda == 1.0) {

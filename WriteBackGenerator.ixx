@@ -16,6 +16,7 @@ public:
     WriteBackGenerator() = default;
 
     void initialize(std::initializer_list<std::pair<int, double>> l) {
+        m_write_back_probabilities.clear();
         for (auto [id, prob] : l) {
             m_write_back_probabilities.push_back({static_cast<std::byte>(1 << id), prob});
         }

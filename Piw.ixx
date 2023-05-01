@@ -10,25 +10,25 @@ import rapid.BlockQueue;
 export template <std::byte PEER_MASK, size_t RING_LENGTH, size_t K = 2, bool ENABLE_UNWRITEABLE = false>
 class Piw {
     constexpr const static std::byte m_peer_mask { PEER_MASK };
-    constexpr const static short m_ring_length { RING_LENGTH };
+    constexpr const static unsigned short m_ring_length { RING_LENGTH };
 
     std::bitset<K> m_dirty_cam;
     std::bitset<K> m_unwritable_cam;
 
-    BlockQueue<short, m_ring_length> m_cancel_dirty;
+    BlockQueue<unsigned short, m_ring_length> m_cancel_dirty;
     BlockQueue<Packet, m_ring_length - 1> m_backward_packet;
     BlockQueue<Packet, m_ring_length - 1> m_write_back_packet;
 
 public:
     Piw() = default;
 
-    void cancel_dirty_step(short key)
+    void cancel_dirty_step(unsigned short key)
     {
         m_cancel_dirty.enqueue(std::move(key));
         m_dirty_cam.reset(m_cancel_dirty.next());
     }
 
-    void reset_scheduling(short key) {
+    void reset_scheduling(unsigned short key) {
         m_unwritable_cam.reset(key);
     }
 

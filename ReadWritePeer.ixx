@@ -26,8 +26,8 @@ export template <size_t RID, size_t WID, size_t N, size_t K = 2, size_t EXPLICIT
 class ReadWritePeer : public DualPortDevice {
     constexpr const static std::byte m_pir_mask { std::byte(1 << RID) };
     constexpr const static std::byte m_piw_mask { std::byte(1 << WID) };
-    constexpr const static short m_ring_length { RING_LENGTH(RID, WID) };
-    constexpr const static short m_clock_max { EXPLICIT_CLOCK_MAX ? EXPLICIT_CLOCK_MAX : CLOCK_MAX(RID, WID) };
+    constexpr const static unsigned short m_ring_length { RING_LENGTH(RID, WID) };
+    constexpr const static unsigned short m_clock_max { EXPLICIT_CLOCK_MAX ? EXPLICIT_CLOCK_MAX : CLOCK_MAX(RID, WID) };
 
     Pir<m_pir_mask, N, m_clock_max, K> m_pir;
     Piw<m_pir_mask, m_ring_length, K, ENABLE_UNWRITEABLE> m_piw;
@@ -36,7 +36,7 @@ class ReadWritePeer : public DualPortDevice {
 
     Packet temp_backward_packet {};
     Packet temp_write_back_packet {};
-    short temp_key {};
+    unsigned short temp_key {};
 
 public:
     ReadWritePeer() = default;
@@ -51,7 +51,7 @@ public:
         return pir_out;
     }
 
-    short get_lock_key() override {
+    unsigned short get_lock_key() override {
         return m_pir.get_scheduling_key();
     }
 
@@ -64,7 +64,7 @@ public:
         return piw_out;
     }
 
-    void unlock_key(short key) override {
+    void unlock_key(unsigned short key) override {
         m_piw.reset_scheduling(key);
     }
 };

@@ -75,5 +75,8 @@
     <ClCompile Include="RoundRobinQueue.ixx">
       <Filter>资源文件</Filter>
     </ClCompile>
+    <ClCompile Include="ExperimentBench.ixx">
+      <Filter>资源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

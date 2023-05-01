@@ -14,10 +14,10 @@ export class DualPortDevice {
 public:
     virtual Packet next1(Packet&&) = 0;
     virtual Packet next2(Packet&&) = 0;
-    virtual short get_lock_key() {
+    virtual unsigned short get_lock_key() {
         return 0;
     }
-    virtual void unlock_key(short key) { }
+    virtual void unlock_key(unsigned short key) { }
 };
 
 export enum class DeviceType {

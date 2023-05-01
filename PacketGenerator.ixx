@@ -24,6 +24,11 @@ public:
     {
     }
 
+    void set_lambda(double lambda)
+    {
+        m_geo.set_lambda(lambda);
+    }
+
     void initialize_write_back_generator(std::initializer_list<std::pair<int, double>> l)
     {
         m_write_back_generator.initialize(l);
