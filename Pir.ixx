@@ -9,6 +9,7 @@ export module rapid.Pir;
 import rapid.Packet;
 import rapid.PacketQueue;
 import rapid.BlockQueue;
+import rapid.RoundRobinQueue;
 
 export template <std::byte DEST_MASK, size_t N, size_t CLOCK_MAX, size_t K = 2>
 class Pir {
@@ -23,42 +24,28 @@ class Pir {
     std::array<PacketQueue<N>, K> m_buffer;
     int m_buffer_size { 0 };
 
-    int m_round_robin { 1 };
-    int m_schedule_count { 0 };
-
-    void round_robin_step()
-    {
-        if constexpr (K > 2) {
-            if (m_schedule_count > 1) {
-                for (int next { m_round_robin + 1 };; ++next) {
-                    if (next == K) {
-                        next = 1;
-                    }
-                    if (m_schedule_cam.test(next)) {
-                        m_round_robin = next;
-                        //std::cout << "round robin = " << m_round_robin << std::endl;
-                        return;
-                    }
-                    if (next == m_round_robin) {
-                        break;
-                    }
-                }
-            }
-        }
-    }
-
+    RoundRobinQueue<K> m_schedule_queue;
     BlockQueue<short, m_clock_max> m_block_queue;
 
-    void ready_to_schedule(short key) {
-        //std::cout << "READY SCH " << key << std::endl;
-        if (++m_schedule_count == 1) {
-            m_round_robin = key;
+    short m_scheduling_key { 0 };
+
+    void ready_to_schedule(short key)
+    {
+        if constexpr (OUTPUT) {
+            std::cout << "[ " << static_cast<int>(DEST_MASK) << " ]";
+            std::cout << g_clock << " READY SCH : " << key << std::endl;
         }
+        m_schedule_queue.enqueue(key);
         m_schedule_cam.set(key);
+        m_scheduling_key = key;
     }
 
-    void complete_schedule(short key) {
-        --m_schedule_count;
+    void complete_schedule(short key)
+    {
+        if constexpr (OUTPUT) {
+            std::cout << "[ " << static_cast<int>(DEST_MASK) << " ]";
+            std::cout << g_clock << " COMPLETE SCH : " << key << std::endl;
+        }
         m_schedule_cam.reset(key);
     }
 
@@ -66,36 +53,40 @@ class Pir {
     {
         short key { m_block_queue.next() };
         if (key != 0) {
-            if (m_buffer.at(key).is_empty()) {
-                m_dirty_cam.reset(key);
+            if (m_front_buffer_size.at(key) > 0) {
+                m_suspend_cam.set(key);
             } else {
-                if (m_front_buffer_size.at(key) > 0) {
-                    m_suspend_cam.set(key);
+                if (m_buffer.at(key).is_empty()) {
+                    m_dirty_cam.reset(key);
                 } else {
                     ready_to_schedule(key);
                 }
             }
-            //std::cout << "timeout = " << key << std::endl;
-            //std::cout << "fbs     = " << m_front_buffer_size.at(key) << std::endl;
+            if constexpr (OUTPUT) {
+                std::cout << "[ " << static_cast<int>(DEST_MASK) << " ]";
+                std::cout << g_clock << " TIMEOUT : " << key << " (" << m_front_buffer_size.at(key) << ")" << std::endl;
+            }
         }
         return key;
     }
 
     Packet schedule()
     {
-        if (!m_schedule_cam.test(m_round_robin)) {
+        auto key { m_schedule_queue.dequeue() };
+        if (key == 0) {
             return Packet {};
         }
-        auto pkt { m_buffer.at(m_round_robin).dequeue() };
-        if (!pkt.is_empty()) {
-            --m_buffer_size;
-            //std::cout << "DEQUEUE " << g_clock << " : " << pkt << std::endl;
-            if (m_buffer.at(m_round_robin).is_empty()) {
-                m_dirty_cam.reset(m_round_robin);
-                complete_schedule(m_round_robin);
-                //std::cout << "COMPLETE " << m_round_robin << std::endl;
-            }
-            round_robin_step();
+        auto pkt { m_buffer.at(key).dequeue() };
+        --m_buffer_size;
+        if constexpr (OUTPUT) {
+            std::cout << "[ " << static_cast<int>(DEST_MASK) << " ]";
+            std::cout << "DEQUEUE(" << m_buffer_size << ") " << g_clock << " : " << pkt << std::endl;
+        }
+        if (m_buffer.at(key).is_empty()) {
+            m_dirty_cam.reset(key);
+            complete_schedule(key);
+        } else {
+            m_schedule_queue.enqueue(key);
         }
         return pkt;
     }
@@ -104,10 +95,16 @@ class Pir {
     {
         if (m_buffer_size < N) {
             ++m_buffer_size;
-            //std::cout << "enqueue " << g_clock << " : " << pkt << std::endl;
+            if constexpr (OUTPUT) {
+                std::cout << "[ " << static_cast<int>(DEST_MASK) << " ]";
+                std::cout << "enqueue(" << m_buffer_size << ") " << g_clock << " : " << pkt << std::endl;
+            }
             m_buffer.at(pkt.m_key).enqueue(std::move(pkt));
         } else {
-            std::cout << "drop " << g_clock << " : " << pkt << std::endl;
+            if constexpr (OUTPUT) {
+                std::cout << "[ " << static_cast<int>(DEST_MASK) << " ]";
+                std::cout << "drop " << g_clock << " : " << pkt << std::endl;
+            }
             ++m_drop_packet_count;
         }
         if (pkt.is_backward_packet(m_dest_mask)) {
@@ -130,14 +127,25 @@ public:
             m_dirty_cam.set(pkt.m_key);
             m_stateful_ram[pkt.m_key] = pkt.m_id;
             m_block_queue.enqueue(std::move(pkt.m_key));
-            //std::cout << "write " << pkt.m_id << std::endl;
+            if constexpr (OUTPUT) {
+                std::cout << "[ " << static_cast<int>(DEST_MASK) << " ]";
+                std::cout << g_clock << " WRITE " << pkt.m_key << " FROM " << pkt.m_id << std::endl;
+            }
         }
     }
 
-    void count_backward_packet(short key) {
+    void count_backward_packet(short key)
+    {
         if (key != 0) {
             ++m_front_buffer_size.at(key);
         }
+    }
+
+    short get_scheduling_key()
+    {
+        short key { m_scheduling_key };
+        m_scheduling_key = 0;
+        return key;
     }
 
     std::pair<Packet, short> next(Packet&& pkt)

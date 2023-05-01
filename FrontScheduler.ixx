@@ -23,13 +23,23 @@ public:
             if (!m_queue.enqueue(std::move(backward_packet))) {
                 ++m_drop_packet_count;
                 backward_key = 0;
-                std::cout << "back-drop " << backward_packet << std::endl;
+                if constexpr (OUTPUT) {
+                    std::cout << "back-drop " << g_clock << " : " << backward_packet << std::endl;
+                }
             } else {
-                //std::cout << "backward: " << backward_packet << std::endl;
+                if constexpr (OUTPUT) {
+                    std::cout << "backward  " << g_clock << " : " << backward_packet << std::endl;
+                }
             }
         }
         if (pipeline_packet.is_empty()) {
-            return { m_queue.dequeue(), backward_key };
+            auto pkt { m_queue.dequeue() };
+            if (!pkt.is_empty()) {
+                if constexpr (OUTPUT) {
+                    std::cout << "FRONT-DEQUEUE " << g_clock << " : " << pkt << std::endl;
+                }
+            }
+            return { pkt, backward_key };
         } else {
             return { pipeline_packet, backward_key };
         }

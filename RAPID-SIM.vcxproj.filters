@@ -72,5 +72,8 @@
     <ClCompile Include="OverlapPeer.ixx">
       <Filter>资源文件</Filter>
     </ClCompile>
+    <ClCompile Include="RoundRobinQueue.ixx">
+      <Filter>资源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

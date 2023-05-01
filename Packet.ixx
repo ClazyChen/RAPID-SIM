@@ -51,3 +51,4 @@ export std::ostream& operator<<(std::ostream& os, const Packet& pkt)
 }
 
 export int g_clock { 0 };
+export constexpr const bool OUTPUT { false };

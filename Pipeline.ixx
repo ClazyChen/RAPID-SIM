@@ -66,12 +66,15 @@ class Pipeline : public Device {
     struct ProcStatus {
         size_t m_device_id_as_pir {};
         size_t m_device_id_as_piw {};
+        size_t m_dual_device_id_as_pir {};
+        size_t m_dual_device_id_as_piw {};
     };
 
     std::array<ProcStatus, m_proc_num> m_proc_status;
     std::vector<std::unique_ptr<DualPortDevice>> m_dual_port_devices;
     std::vector<std::unique_ptr<Device>> m_devices;
     std::vector<std::unique_ptr<Device>> m_pipeline;
+    std::vector<std::pair<DualPortDevice*, DualPortDevice*>> m_locks;
 
     PipelineBuilder<m_proc_num + 1> m_pipeline_builder;
 
@@ -102,17 +105,26 @@ class Pipeline : public Device {
     }
 
 protected:
-    template <size_t RID, size_t WID, size_t EXPLICIT_CLOCK_MAX = 0>
+    template <size_t RID, size_t WID, size_t EXPLICIT_CLOCK_MAX = 0, bool ENABLE_UNWRITEABLE = false>
     void add_read_write_peer()
     {
-        std::unique_ptr<DualPortDevice> peer { std::make_unique<ReadWritePeer<RID, WID, N, K, EXPLICIT_CLOCK_MAX>>() };
+        std::unique_ptr<DualPortDevice> peer { std::make_unique<ReadWritePeer<RID, WID, N, K, EXPLICIT_CLOCK_MAX, ENABLE_UNWRITEABLE>>() };
         auto read_device { std::make_unique<VirtualDevice<DeviceType::Read>>(peer) };
         auto write_device { std::make_unique<VirtualDevice<DeviceType::Write>>(peer) };
         m_proc_status.at(RID).m_device_id_as_pir = m_devices.size();
         m_devices.push_back(std::move(read_device));
         m_proc_status.at(WID).m_device_id_as_piw = m_devices.size();
         m_devices.push_back(std::move(write_device));
+        m_proc_status.at(RID).m_dual_device_id_as_pir = m_dual_port_devices.size();
+        m_proc_status.at(WID).m_dual_device_id_as_piw = m_dual_port_devices.size();
         m_dual_port_devices.push_back(std::move(peer));
+    }
+
+    template <size_t RID, size_t WID>
+    void add_lock() {
+        auto pir_id { m_proc_status.at(RID).m_dual_device_id_as_pir };
+        auto piw_id { m_proc_status.at(WID).m_dual_device_id_as_piw };
+        m_locks.push_back(std::make_pair(m_dual_port_devices.at(pir_id).get(), m_dual_port_devices.at(piw_id).get()));
     }
 
     virtual void initialize_peers() = 0;
@@ -132,6 +144,9 @@ public:
     {
         for (auto& device : m_pipeline) {
             pkt = device->next(std::move(pkt));
+        }
+        for (auto& [pir, piw] : m_locks) {
+            piw->unlock_key(pir->get_lock_key());
         }
         return pkt;
     }

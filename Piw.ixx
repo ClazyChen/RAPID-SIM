@@ -7,12 +7,13 @@ export module rapid.Piw;
 import rapid.Packet;
 import rapid.BlockQueue;
 
-export template <std::byte PEER_MASK, size_t RING_LENGTH, size_t K = 2>
+export template <std::byte PEER_MASK, size_t RING_LENGTH, size_t K = 2, bool ENABLE_UNWRITEABLE = false>
 class Piw {
     constexpr const static std::byte m_peer_mask { PEER_MASK };
     constexpr const static short m_ring_length { RING_LENGTH };
 
     std::bitset<K> m_dirty_cam;
+    std::bitset<K> m_unwritable_cam;
 
     BlockQueue<short, m_ring_length> m_cancel_dirty;
     BlockQueue<Packet, m_ring_length - 1> m_backward_packet;
@@ -27,6 +28,10 @@ public:
         m_dirty_cam.reset(m_cancel_dirty.next());
     }
 
+    void reset_scheduling(short key) {
+        m_unwritable_cam.reset(key);
+    }
+
     std::tuple<Packet, Packet, Packet> next(Packet&& pkt)
     {
         Packet bp { m_backward_packet.next() };
@@ -38,8 +43,14 @@ public:
         } else {
             Packet pipe { pkt };
             if (pkt.is_write_back_packet(m_peer_mask)) {
-                m_dirty_cam.set(pkt.m_key);
-                m_write_back_packet.enqueue(std::move(pkt));
+                if (!m_unwritable_cam.test(pkt.m_key)) {
+                    m_dirty_cam.set(pkt.m_key);
+                    m_write_back_packet.enqueue(std::move(pkt));
+                }
+            } else {
+                if constexpr (ENABLE_UNWRITEABLE) {
+                    m_unwritable_cam.set(pkt.m_key);
+                }
             }
             return { pipe, bp, wb };
         }

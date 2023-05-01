@@ -8,7 +8,8 @@ class OverlapPeer : public Pipeline<N, K, PROC_NUM> {
 protected:
     void initialize_peers() override
     {
-        this->add_read_write_peer<RID1, WID1, T1>();
+        this->add_read_write_peer<RID1, WID1, T1, true>();
         this->add_read_write_peer<RID2, WID2>();
+        this->add_lock<RID2, WID1>();
     }
 };

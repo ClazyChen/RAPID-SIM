@@ -21,7 +21,7 @@ export consteval size_t CLOCK_MAX(size_t RID, size_t WID)
     return PIR_PIW + (PIR_PIW + FB_PIR) * (WID - RID) + RING_LENGTH(RID, WID);
 }
 
-export template <size_t RID, size_t WID, size_t N, size_t K = 2, size_t EXPLICIT_CLOCK_MAX = 0>
+export template <size_t RID, size_t WID, size_t N, size_t K = 2, size_t EXPLICIT_CLOCK_MAX = 0, bool ENABLE_UNWRITEABLE = false>
     requires(RID < WID)
 class ReadWritePeer : public DualPortDevice {
     constexpr const static std::byte m_pir_mask { std::byte(1 << RID) };
@@ -30,7 +30,7 @@ class ReadWritePeer : public DualPortDevice {
     constexpr const static short m_clock_max { EXPLICIT_CLOCK_MAX ? EXPLICIT_CLOCK_MAX : CLOCK_MAX(RID, WID) };
 
     Pir<m_pir_mask, N, m_clock_max, K> m_pir;
-    Piw<m_pir_mask, m_ring_length, K> m_piw;
+    Piw<m_pir_mask, m_ring_length, K, ENABLE_UNWRITEABLE> m_piw;
     FrontScheduler<N> m_front_scheduler;
     VirtualPipeline<FB_PIR> m_fb_pir;
 
@@ -51,6 +51,10 @@ public:
         return pir_out;
     }
 
+    short get_lock_key() override {
+        return m_pir.get_scheduling_key();
+    }
+
     Packet next2(Packet&& piw) override
     {
         m_piw.cancel_dirty_step(temp_key);
@@ -58,5 +62,9 @@ public:
         temp_backward_packet = bp;
         temp_write_back_packet = wb;
         return piw_out;
+    }
+
+    void unlock_key(short key) override {
+        m_piw.reset_scheduling(key);
     }
 };
