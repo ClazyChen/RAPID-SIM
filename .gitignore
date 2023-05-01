@@ -34,3 +34,6 @@
 # visual studio
 .vs/
 x64/
+
+# generated files
+result*
