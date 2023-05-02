@@ -102,7 +102,7 @@ class Pir {
                 std::cout << "[ " << static_cast<int>(DEST_MASK) << " ]";
                 std::cout << "enqueue(" << m_buffer_size << ") " << g_clock << " : " << pkt << std::endl;
             }
-            if (is_backward) {
+            if (is_backward && !m_schedule_cam.test(pkt.m_key)) {
                 m_buffer.at(pkt.m_key).enqueue_r2p(std::move(pkt));
             } else {
                 m_buffer.at(pkt.m_key).enqueue_p2p(std::move(pkt));
