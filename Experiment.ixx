@@ -16,7 +16,7 @@ import rapid.PacketAnalyzer;
 export template <typename DeviceType, size_t K = 2>
     requires std::is_base_of_v<Device, DeviceType>
 class Experiment {
-    constexpr const static int m_extra_cycle_count = 8000;
+    constexpr const static int m_extra_cycle_count = 128000;
 
     PacketGenerator<K> m_packet_generator;
     PacketAnalyzer<K> m_packet_analyzer;
