@@ -45,6 +45,10 @@ public:
         m_pir.reset();
     }
 
+    std::pair<int, int> get_drop_packet_count() const {
+        return { m_front_scheduler.m_drop_packet_count, m_pir.m_drop_packet_count };
+    }
+
     Packet next1(Packet&& pir) override
     {
         auto [vp_in, key] = m_front_scheduler.next(std::move(pir), std::move(temp_backward_packet));
