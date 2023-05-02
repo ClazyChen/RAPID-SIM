@@ -25,6 +25,7 @@
     <ClCompile Include="ExperimentBench.ixx" />
     <ClCompile Include="FrontScheduler.ixx" />
     <ClCompile Include="GeometryDistribution.ixx" />
+    <ClCompile Include="LinkedPacketQueue.ixx" />
     <ClCompile Include="OverlapPeer.ixx" />
     <ClCompile Include="Packet.ixx" />
     <ClCompile Include="PacketAnalyzer.ixx" />

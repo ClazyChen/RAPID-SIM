@@ -8,6 +8,7 @@ export module rapid.Pir;
 
 import rapid.Packet;
 import rapid.PacketQueue;
+import rapid.LinkedPacketQueue;
 import rapid.BlockQueue;
 import rapid.RoundRobinQueue;
 
@@ -21,7 +22,7 @@ class Pir {
     std::bitset<K> m_dirty_cam;
     std::bitset<K> m_suspend_cam;
     std::bitset<K> m_schedule_cam;
-    std::array<PacketQueue<N>, K> m_buffer;
+    std::array<LinkedPacketQueue<N>, K> m_buffer;
     int m_buffer_size { 0 };
 
     RoundRobinQueue<K> m_schedule_queue;
@@ -35,6 +36,7 @@ class Pir {
             std::cout << "[ " << static_cast<int>(DEST_MASK) << " ]";
             std::cout << g_clock << " READY SCH : " << key << std::endl;
         }
+        m_buffer.at(key).merge_queues();
         m_schedule_queue.enqueue(key);
         m_schedule_cam.set(key);
         m_scheduling_key = key;
@@ -93,13 +95,18 @@ class Pir {
 
     Packet enqueue(Packet&& pkt)
     {
+        auto is_backward { pkt.is_backward_packet(m_dest_mask) };
         if (m_buffer_size < N) {
             ++m_buffer_size;
             if constexpr (OUTPUT) {
                 std::cout << "[ " << static_cast<int>(DEST_MASK) << " ]";
                 std::cout << "enqueue(" << m_buffer_size << ") " << g_clock << " : " << pkt << std::endl;
             }
-            m_buffer.at(pkt.m_key).enqueue(std::move(pkt));
+            if (is_backward) {
+                m_buffer.at(pkt.m_key).enqueue_r2p(std::move(pkt));
+            } else {
+                m_buffer.at(pkt.m_key).enqueue_p2p(std::move(pkt));
+            }
         } else {
             if constexpr (OUTPUT) {
                 std::cout << "[ " << static_cast<int>(DEST_MASK) << " ]";
@@ -107,7 +114,7 @@ class Pir {
             }
             ++m_drop_packet_count;
         }
-        if (pkt.is_backward_packet(m_dest_mask)) {
+        if (is_backward) {
             if (--m_front_buffer_size.at(pkt.m_key) == 0 && m_suspend_cam.test(pkt.m_key)) {
                 m_suspend_cam.reset(pkt.m_key);
                 ready_to_schedule(pkt.m_key);

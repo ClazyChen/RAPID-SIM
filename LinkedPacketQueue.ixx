@@ -34,8 +34,15 @@ class LinkedPacketQueue {
     }
 
 public:
-    LinkedPacketQueue() {
+    void reset() {
+        m_p2p = m_r2p = StaticQueue {};
+        m_back = 0;
         std::fill(m_next_link.begin(), m_next_link.end(), -1);
+    }
+
+    LinkedPacketQueue()
+    {
+        reset();
     }
 
     void enqueue_p2p(Packet&& pkt) {
@@ -47,7 +54,14 @@ public:
     }
 
     void merge_queues() {
-        m_next_link[m_p2p.m_back] = m_r2p.m_front;
+        if (!m_r2p.m_empty) {
+            if (!m_p2p.m_empty) {
+                m_next_link[m_r2p.m_back] = m_p2p.m_front;
+                m_p2p.m_front = m_r2p.m_front;
+            } else {
+                m_p2p = m_r2p;
+            }
+        }
         m_r2p.m_empty = true;
     }
 
@@ -62,6 +76,10 @@ public:
             }
             return pkt;
         }
+    }
+
+    bool is_empty() const {
+        return m_p2p.m_empty && m_r2p.m_empty;
     }
 
 };
