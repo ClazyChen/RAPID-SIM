@@ -8,12 +8,14 @@ import rapid.Packet;
 export class Device {
 public:
     virtual Packet next(Packet&&) = 0;
+    virtual void reset() { }
 };
 
 export class DualPortDevice {
 public:
     virtual Packet next1(Packet&&) = 0;
     virtual Packet next2(Packet&&) = 0;
+    virtual void reset() { }
     virtual unsigned short get_lock_key() {
         return 0;
     }

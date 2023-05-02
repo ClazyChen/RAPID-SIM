@@ -132,6 +132,12 @@ protected:
 public:
     Pipeline() = default;
 
+    void reset() {
+        for (auto& dual_port_device : m_dual_port_devices) {
+            dual_port_device->reset();
+        }
+    }
+
     virtual void initialize()
     {
         m_devices.push_back(nullptr);

@@ -98,5 +98,6 @@ public:
         m_tx_packet_count = 0;
         m_target_count = 0;
         m_packet_analyzer.reset();
+        m_device.reset();
     }
 };

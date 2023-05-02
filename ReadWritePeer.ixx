@@ -40,6 +40,11 @@ class ReadWritePeer : public DualPortDevice {
 
 public:
     ReadWritePeer() = default;
+
+    void reset() override {
+        m_pir.reset();
+    }
+
     Packet next1(Packet&& pir) override
     {
         auto [vp_in, key] = m_front_scheduler.next(std::move(pir), std::move(temp_backward_packet));

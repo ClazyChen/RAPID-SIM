@@ -128,6 +128,12 @@ public:
 
     Pir() = default;
 
+    void reset() {
+        for (auto& queue : m_buffer) {
+            queue.reset();
+        }
+    }
+
     void write_cam(Packet&& pkt)
     {
         if (!pkt.is_empty()) {

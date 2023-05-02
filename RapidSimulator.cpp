@@ -31,14 +31,15 @@ void run_experiment_bench_T1(int packet_number)
 int main()
 {
     if constexpr (TEST_MODE) {
-        Experiment<SinglePeer<64, 0, 1, 33>, 33> experiment;
+        //Experiment<SinglePeer<8, 0, 1, 2>, 2> experiment;
+        Experiment<OverlapPeer<64, 0, 2, 1, 3, 0, 33>, 33> experiment;
         experiment.set_lambda(0.1);
         experiment.initialize_write_back_generator({ { 0, 0.1 }, { 1, 0.1 } });
         experiment.reset();
         experiment.run_until(1000000);
         experiment.report(std::cout);
     } else {
-        run_experiment_bench_T1<0, 2, 1, 3>(1000);
+        run_experiment_bench_T1<0, 2, 1, 3>(1000000);
     }
     return 0;
 }
