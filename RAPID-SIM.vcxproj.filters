@@ -78,5 +78,8 @@
     <ClCompile Include="ExperimentBench.ixx">
       <Filter>资源文件</Filter>
     </ClCompile>
+    <ClCompile Include="PacketAnalyzer.ixx">
+      <Filter>资源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -7,7 +7,7 @@ import rapid.experimental;
 
 export template <size_t RID1, size_t WID1, size_t RID2, size_t WID2, size_t EXPLICIT_CLOCK_MAX>
 class ExperimentBench {
-    Experiment<OverlapPeer<64, RID1, WID1, RID2, WID2, EXPLICIT_CLOCK_MAX, 32769, 8>, 32769> m_experiment;
+    Experiment<OverlapPeer<128, RID1, WID1, RID2, WID2, EXPLICIT_CLOCK_MAX, 32769, 8>, 32769> m_experiment;
 
 public:
     ExperimentBench() = default;

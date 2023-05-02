@@ -11,6 +11,7 @@ export import rapid.experimental.OverlapPeer;
 import rapid.Packet;
 import rapid.Device;
 import rapid.PacketGenerator;
+import rapid.PacketAnalyzer;
 
 export template <typename DeviceType, size_t K = 2>
     requires std::is_base_of_v<Device, DeviceType>
@@ -18,6 +19,7 @@ class Experiment {
     constexpr const static int m_extra_cycle_count = 8000;
 
     PacketGenerator<K> m_packet_generator;
+    PacketAnalyzer<K> m_packet_analyzer;
     DeviceType m_device;
 
     void receive_packet(Packet&& pkt)
@@ -32,6 +34,7 @@ class Experiment {
             //std::cout << g_clock << " O " << pkt << std::endl;
             ++m_tx_packet_count;
         }
+        m_packet_analyzer.receive_packet(std::move(pkt));
     }
 
     int m_rx_packet_count { 0 };
@@ -82,10 +85,11 @@ public:
         run_extra_cycles();
     }
 
-    void report(std::ostream& os)
+    void report(std::ostream& os) const
     {
         os << std::format("Recv Pkt = {}", m_rx_packet_count) << std::endl;
         os << std::format("Send Pkt = {}", m_tx_packet_count) << std::endl;
+        os << std::format("Wrong %  = {:.6f}", static_cast<double>(m_packet_analyzer.get_wrong_order_count()) / m_rx_packet_count) << std::endl;
         os << std::format("Drop  %  = {:.6f}", static_cast<double>(m_rx_packet_count - m_tx_packet_count) / m_rx_packet_count) << std::endl;
     }
 
@@ -93,5 +97,6 @@ public:
         m_rx_packet_count = 0;
         m_tx_packet_count = 0;
         m_target_count = 0;
+        m_packet_analyzer.reset();
     }
 };

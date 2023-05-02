@@ -28,6 +28,6 @@ void run_experiment_bench_T1(int packet_number)
 
 int main()
 {
-    run_experiment_bench_T1<0, 2, 1, 3>(1000000);
+    run_experiment_bench_T1<0, 2, 1, 3>(1000);
     return 0;
 }

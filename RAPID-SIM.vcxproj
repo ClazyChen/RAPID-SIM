@@ -27,6 +27,7 @@
     <ClCompile Include="GeometryDistribution.ixx" />
     <ClCompile Include="OverlapPeer.ixx" />
     <ClCompile Include="Packet.ixx" />
+    <ClCompile Include="PacketAnalyzer.ixx" />
     <ClCompile Include="PacketGenerator.ixx" />
     <ClCompile Include="PacketQueue.ixx" />
     <ClCompile Include="Pipeline.ixx" />
