@@ -90,8 +90,8 @@ public:
         os << std::format("Recv Pkt = {}", m_rx_packet_count) << std::endl;
         os << std::format("Send Pkt = {}", m_tx_packet_count) << std::endl;
         os << std::format("Wrng Pkt = {}", m_packet_analyzer.get_wrong_order_count()) << std::endl;
-        os << std::format("Wrong %  = {:.6f}", static_cast<double>(m_packet_analyzer.get_wrong_order_count()) / m_rx_packet_count) << std::endl;
-        os << std::format("Drop  %  = {:.6f}", static_cast<double>(m_rx_packet_count - m_tx_packet_count) / m_rx_packet_count) << std::endl;
+        os << std::format("Wrong %  = {:.6f}", static_cast<double>(m_packet_analyzer.get_wrong_order_count()) / m_target_count) << std::endl;
+        os << std::format("Drop  %  = {:.6f}", static_cast<double>(m_rx_packet_count - m_tx_packet_count) / m_target_count) << std::endl;
     }
 
     void reset() {
