@@ -17,8 +17,10 @@ class PacketGenerator {
     int m_clock { 0 };
 
 public:
+    int m_tx_packet_count { 0 };
+
     PacketGenerator() = default;
-    PacketGenerator(double lambda, double alpha = 1.0)
+    PacketGenerator(double lambda, double alpha = 1.01)
         : m_zipf(alpha)
         , m_geo(lambda)
     {
@@ -38,6 +40,7 @@ public:
     {
         if (m_clock == 0) {
             m_clock = m_geo.next() - 1;
+            ++m_tx_packet_count;
             return m_write_back_generator.set_write_back(Packet { m_zipf.next() });
         } else {
             --m_clock;

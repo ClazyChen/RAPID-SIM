@@ -53,7 +53,7 @@ public:
     {
         m_device.initialize();
     }
-    Experiment(double lambda, double alpha = 1.0)
+    Experiment(double lambda, double alpha = 1.01)
         : m_packet_generator(lambda, alpha)
     {
         m_device.initialize();
@@ -79,7 +79,7 @@ public:
     void run_until(int packet_count)
     {
         m_target_count = packet_count;
-        while (m_rx_packet_count < packet_count) {
+        while (m_packet_generator.m_tx_packet_count < packet_count) {
             receive_packet(m_packet_generator.next());
         }
         run_extra_cycles();

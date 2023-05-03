@@ -10,7 +10,7 @@ export module rapid.ZipfDistribution;
 
 export template <size_t K = 2> class ZipfDistribution {
     constexpr const static size_t m_flow_count { K - 1 };
-    double m_alpha { 1.0 };
+    double m_alpha { 1.01 };
     std::array<double, m_flow_count> m_probabilities;
     double m_sum { 0.0 };
 
@@ -28,6 +28,7 @@ export template <size_t K = 2> class ZipfDistribution {
             m_probabilities.at(i) += m_probabilities.at(i - 1);
         }
         m_probabilities.at(m_flow_count - 1) = m_sum;
+        m_sum = std::max(m_sum, 1.0 / (m_alpha - 1));
         m_distribution = std::uniform_real_distribution<>(0.0, m_sum);
     }
 
@@ -45,6 +46,9 @@ public:
     unsigned short next()
     {
         double x { m_distribution(m_engine) };
+        if (x > m_probabilities.back()) {
+            return 0;
+        }
         auto it { std::lower_bound(m_probabilities.begin(), m_probabilities.end(), x) };
         auto res { static_cast<unsigned short>(it - m_probabilities.begin() + 1) };
         return res;
