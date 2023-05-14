@@ -84,5 +84,14 @@
     <ClCompile Include="LinkedPacketQueue.ixx">
       <Filter>资源文件</Filter>
     </ClCompile>
+    <ClCompile Include="SongPipeline.ixx">
+      <Filter>资源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SeqIdMarker.ixx">
+      <Filter>资源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SongPiw.ixx">
+      <Filter>资源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

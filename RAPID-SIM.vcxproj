@@ -38,7 +38,10 @@
     <ClCompile Include="RawPipeline.ixx" />
     <ClCompile Include="ReadWritePeer.ixx" />
     <ClCompile Include="RoundRobinQueue.ixx" />
+    <ClCompile Include="SeqIdMarker.ixx" />
     <ClCompile Include="SinglePeer.ixx" />
+    <ClCompile Include="SongPipeline.ixx" />
+    <ClCompile Include="SongPiw.ixx" />
     <ClCompile Include="VirtualPipeline.ixx" />
     <ClCompile Include="WriteBackGenerator.ixx" />
     <ClCompile Include="ZipfDistribution.ixx" />
@@ -139,6 +142,7 @@
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <ScanSourceForModuleDependencies>true</ScanSourceForModuleDependencies>
       <TranslateIncludes>false</TranslateIncludes>
+      <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

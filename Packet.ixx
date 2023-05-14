@@ -40,9 +40,29 @@ public:
     {
         m_backward_tag_bitmap |= bitmap;
     }
+
+    // 复用backward tag bitmap（在不overlap时没有用）
+    void set_seq_id(std::byte seq_id)
+    {
+        m_backward_tag_bitmap = seq_id;
+    }
+    std::byte get_seq_id()
+    {
+        return m_backward_tag_bitmap;
+    }
 };
 
 int Packet::s_id { 0 };
+
+export std::byte next_seq_id(std::byte seq_id) {
+    int next { static_cast<int>(seq_id) + 1 };
+    next %= 256;
+    if (next == 0) {
+        next = 1;
+    }
+    std::byte result { static_cast<std::byte>(next) };
+    return result;
+}
 
 export std::ostream& operator<<(std::ostream& os, const Packet& pkt)
 {

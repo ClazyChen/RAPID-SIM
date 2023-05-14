@@ -8,9 +8,11 @@ module;
 
 export module rapid.ZipfDistribution;
 
+const bool use_true_zipf { false };
+
 export template <size_t K = 2> class ZipfDistribution {
     constexpr const static size_t m_flow_count { K - 1 };
-    double m_alpha { 1.01 };
+    double m_alpha { use_true_zipf ? 1.01 : 1.0 };
     std::array<double, m_flow_count> m_probabilities;
     double m_sum { 0.0 };
 
@@ -28,7 +30,9 @@ export template <size_t K = 2> class ZipfDistribution {
             m_probabilities.at(i) += m_probabilities.at(i - 1);
         }
         m_probabilities.at(m_flow_count - 1) = m_sum;
-        m_sum = std::max(m_sum, 1.0 / (m_alpha - 1));
+        if constexpr (use_true_zipf) {
+            m_sum = std::max(m_sum, 1.0 / (m_alpha - 1));
+        } 
         m_distribution = std::uniform_real_distribution<>(0.0, m_sum);
     }
 
