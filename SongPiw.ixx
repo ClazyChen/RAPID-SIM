@@ -41,7 +41,7 @@ public:
                     }
                     state.m_exist = true;
                     state.m_dirty = true;
-                    state.m_seq_id = next_seq_id(state.m_seq_id);
+                    state.m_seq_id = next_seq_id(pkt.get_seq_id());
                     state.m_update_time = g_clock;
                 }
                 return { Packet {}, std::move(pkt) };

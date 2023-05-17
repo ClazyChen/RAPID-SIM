@@ -1,6 +1,7 @@
 module;
 #include <algorithm>
 #include <array>
+#include <iostream>
 
 export module rapid.PacketAnalyzer;
 
@@ -19,6 +20,7 @@ public:
         if (!pkt.is_empty()) {
             if (m_last_packet_id.at(pkt.m_key) > pkt.m_id) {
                 ++m_wrong_order_count;
+                std::cout << "error! : " << pkt << " @ " << m_last_packet_id.at(pkt.m_key) << std::endl;
             } else {
                 m_last_packet_id.at(pkt.m_key) = pkt.m_id;
             }

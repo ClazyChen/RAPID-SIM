@@ -19,12 +19,12 @@ public:
             #pragma omp parallel for
             for (int i { 1 }; i < 10; ++i) {
                 double write_back_ratio = static_cast<double>(i) / 10;
-                Experiment<SongPipeline<128, 32769, 4>, 32769> m_experiment;
-                //Experiment<SinglePeer<128, 0, 3, 32769, 4>, 32769> m_experiment;
+                Experiment<SongPipeline<256, 32769, 8>, 32769> m_experiment;
+                //Experiment<SinglePeer<128, 0, 3, 32769, 8>, 32769> m_experiment;
                 //std::cout << "lambda = " << lambda << " ; write_back_ratio = " << write_back_ratio << std::endl;
                 m_results[i] << " lambda = " << lambda << " ; write_back_ratio = " << write_back_ratio << std::endl;
                 m_experiment.set_lambda(lambda);
-                m_experiment.initialize_write_back_generator({ { 0, write_back_ratio }, { 1, write_back_ratio } });
+                m_experiment.initialize_write_back_generator({ { 0, write_back_ratio } });
                 m_experiment.reset();
                 m_experiment.run_until(packet_number);
                 m_experiment.report(m_results[i]);

@@ -37,10 +37,10 @@ int main()
         experiment.set_lambda(0.9);
         experiment.initialize_write_back_generator({ { 0, 0.9 }, { 1, 0.1 } });
         experiment.reset();
-        experiment.run_until(100);
+        experiment.run_until(1000000);
         experiment.report(std::cout);
     } else {
-        run_experiment_bench_T1<0, 2, 1, 3>(1000000);
+        run_experiment_bench_T1<0, 2, 1, 3>(5000);
     }
     return 0;
 }

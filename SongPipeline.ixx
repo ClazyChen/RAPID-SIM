@@ -45,22 +45,28 @@ public:
         // no action
     }
     Packet next(Packet&& pkt) override {
-        m_front_buffer.enqueue(std::move(pkt));
-        auto&& next_pkt { std::move(m_temp_pkt) };
+        if (!pkt.is_empty()) {
+            m_front_buffer.enqueue(std::move(pkt));
+        }
+        Packet next_pkt { std::move(m_temp_pkt) };
         if (next_pkt.is_empty()) {
             next_pkt = m_front_buffer.dequeue();
         }
         if (!next_pkt.is_empty()) {
             if constexpr (OUTPUT) {
-                std::cout << "    "
+                std::cout << "    " << g_clock << " "
                           << "next_pkt is " << next_pkt << std::endl;
             }
         }
         auto seq_pkt { m_seq_id_marker.next(std::move(next_pkt)) };
         auto pipe_pkt { m_pipeline.next(std::move(seq_pkt)) };
         auto [bp, pp] { m_piw.next(std::move(pipe_pkt)) };
-        m_temp_pkt = std::move(m_backbus.next(std::move(bp)));
+        m_temp_pkt = m_backbus.next(std::move(bp));
         return std::move(pp);
+    }
+
+    int FrontBufferSize() const {
+        return m_front_buffer.size();
     }
 
 };
