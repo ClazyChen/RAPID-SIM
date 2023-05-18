@@ -33,7 +33,7 @@ int main()
 {
     if constexpr (TEST_MODE) {
         //Experiment<SinglePeer<8, 0, 1, 2>, 2> experiment;
-        Experiment<SongPipeline<128, 32769, 4>, 32769> experiment;
+        Experiment<SongPipeline<128, 32769, 4>, 32769, 3> experiment;
         experiment.set_lambda(0.9);
         experiment.initialize_write_back_generator({ { 0, 0.9 }, { 1, 0.1 } });
         experiment.reset();

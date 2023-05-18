@@ -8,9 +8,10 @@ import rapid.GeometryDistribution;
 import rapid.WriteBackGenerator;
 import rapid.Packet;
 
-export template <size_t K = 2>
+export template <size_t K = 2, size_t zipf_N = 3>
 class PacketGenerator {
-    ZipfDistribution<K> m_zipf; // to control the key
+    //生成 zipf_num个zipf分布，每次取包的时候从这些zipf分布中取
+    ZipfDistribution<K, zipf_N> m_zipf; // to control the key
     GeometryDistribution m_geo; // to control the flow
     WriteBackGenerator m_write_back_generator;
 

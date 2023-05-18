@@ -13,12 +13,12 @@ import rapid.Device;
 import rapid.PacketGenerator;
 import rapid.PacketAnalyzer;
 
-export template <typename DeviceType, size_t K = 2>
+export template <typename DeviceType, size_t K = 2, size_t zipf_N = 3>
     requires std::is_base_of_v<Device, DeviceType>
 class Experiment {
     constexpr const static int m_extra_cycle_count = 128000;
 
-    PacketGenerator<K> m_packet_generator;
+    PacketGenerator<K, zipf_N> m_packet_generator;
     PacketAnalyzer<K> m_packet_analyzer;
     DeviceType m_device;
 
