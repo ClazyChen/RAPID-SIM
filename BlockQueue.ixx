@@ -28,7 +28,7 @@ public:
 
     void enqueue(T&& key)
     {
-        m_timers.at((m_clock + m_clock_max) % m_timers_size) = std::move(key);
+        m_timers.at((m_clock + m_clock_max) % m_timers_size) = std::move(key); //每个包在流水线中的index为它预期出流水线的时间
     }
 
     T next()

@@ -45,9 +45,11 @@ public:
         // no action
     }
     Packet next(Packet&& pkt) override {
+        // 从流水线上来的包，进到frontbuffer
         if (!pkt.is_empty()) {
             m_front_buffer.enqueue(std::move(pkt));
         }
+        // 优先调度回环的包
         Packet next_pkt { std::move(m_temp_pkt) };
         if (next_pkt.is_empty()) {
             next_pkt = m_front_buffer.dequeue();
@@ -58,8 +60,11 @@ public:
                           << "next_pkt is " << next_pkt << std::endl;
             }
         }
+        //给调度的包分配序列号
         auto seq_pkt { m_seq_id_marker.next(std::move(next_pkt)) };
+        //将包传入流水线，并从流水线中传出一个包
         auto pipe_pkt { m_pipeline.next(std::move(seq_pkt)) };
+
         auto [bp, pp] { m_piw.next(std::move(pipe_pkt)) };
         m_temp_pkt = m_backbus.next(std::move(bp));
         return std::move(pp);
