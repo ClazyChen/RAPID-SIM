@@ -16,7 +16,7 @@ public:
     void run_all(std::ostream& os, int packet_number) {
         for (double lambda{ 0.1 }; lambda <= 0.9 + 1e-8; lambda += 0.1) {
             std::array<std::stringstream, 10> m_results {};
-            #pragma omp parallel for
+            // #pragma omp parallel for
             for (int i { 1 }; i < 10; ++i) {
                 double write_back_ratio = static_cast<double>(i) / 10;
                 Experiment<SongPipeline<256, 32769, 8>, 32769, 3> m_experiment;

@@ -12,6 +12,7 @@ import rapid.Device;
 import rapid.VirtualPipeline;
 import rapid.SeqIdMarker;
 import rapid.SongPiw;
+import rapid.SongPir;
 
 const size_t PROC_CYCLES { 15 };
 consteval size_t PIPELINE_LENGTH(size_t IID, size_t OID) {
@@ -31,12 +32,14 @@ class SongPipeline : public Device {
     constexpr const static size_t m_backbus_length { BACKBUS_LENGTH(1, PROC_NUM) };
     constexpr const static size_t m_clock_max { CLOCK_MAX(1, PROC_NUM) };
 
-    PacketQueue<N> m_front_buffer;
-    SeqIdMarker<K> m_seq_id_marker;
+    
+
+    // PacketQueue<N> m_front_buffer;
+    // SeqIdMarker<K> m_seq_id_marker;
     VirtualPipeline<m_pipeline_length> m_pipeline;
     VirtualPipeline<m_backbus_length> m_backbus;
     SongPiw<std::byte(1), m_clock_max, K> m_piw;
-
+    SongPir<N, K> m_pir;
     Packet m_temp_pkt;
 
 public:
@@ -46,32 +49,34 @@ public:
     }
     Packet next(Packet&& pkt) override {
         // 从流水线上来的包，进到frontbuffer
-        if (!pkt.is_empty()) {
-            m_front_buffer.enqueue(std::move(pkt));
-        }
+        //if (!pkt.is_empty()) {
+        //    m_front_buffer.enqueue(std::move(pkt));
+        //}
         // 优先调度回环的包
-        Packet next_pkt { std::move(m_temp_pkt) };
-        if (next_pkt.is_empty()) {
-            next_pkt = m_front_buffer.dequeue();
-        }
-        if (!next_pkt.is_empty()) {
-            if constexpr (OUTPUT) {
-                std::cout << "    " << g_clock << " "
-                          << "next_pkt is " << next_pkt << std::endl;
-            }
-        }
+        //Packet next_pkt { std::move(m_temp_pkt) };
+        //if (next_pkt.is_empty()) {
+        //    next_pkt = m_front_buffer.dequeue();
+        //}
+        //if (!next_pkt.is_empty()) {
+        //    if constexpr (OUTPUT) {
+        //        std::cout << "    " << g_clock << " "
+        //                  << "next_pkt is " << next_pkt << std::endl;
+        //    }
+        //}
         //给调度的包分配序列号
-        auto seq_pkt { m_seq_id_marker.next(std::move(next_pkt)) };
+        //auto seq_pkt { m_seq_id_marker.next(std::move(next_pkt)) };
+        auto seq_pkt{ m_pir.next(std::move(pkt)) };
         //将包传入流水线，并从流水线中传出一个包
         auto pipe_pkt { m_pipeline.next(std::move(seq_pkt)) };
 
-        auto [bp, pp] { m_piw.next(std::move(pipe_pkt)) };
-        m_temp_pkt = m_backbus.next(std::move(bp));
+        auto [bp, pp] { m_piw.next(std::move(pipe_pkt)) };//bp是传到ring上的包，pp是在流水线上走的包
+        // m_temp_pkt = m_backbus.next(std::move(bp));// 从ring上下放包，来和流水线上的包调度
+        //m_pir.set_temp_pkt(m_backbus.next(std::move(bp)));
         return std::move(pp);
     }
 
-    int FrontBufferSize() const {
-        return m_front_buffer.size();
-    }
+    //int FrontBufferSize() const {
+    //    return m_front_buffer.size();
+    //}
 
 };

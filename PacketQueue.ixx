@@ -10,6 +10,9 @@ export template <size_t N>
     requires(std::has_single_bit(N))
 class PacketQueue {
     std::array<Packet, N> m_queue;
+    // incoming buffer和schedule buffer以链表的形式存放在queue中
+
+   // std::array<size_t, N> m_next; // 下一个（incoming buffer或该包所属流的schedule buffer的下一个包）
     int m_front { 0 };
     int m_back { 0 };
     bool m_empty { true };

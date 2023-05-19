@@ -93,5 +93,11 @@
     <ClCompile Include="SongPiw.ixx">
       <Filter>资源文件</Filter>
     </ClCompile>
+    <ClCompile Include="SongPir.ixx">
+      <Filter>资源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CircleLinkQueue.ixx">
+      <Filter>资源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

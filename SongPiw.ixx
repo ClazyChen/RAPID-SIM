@@ -35,7 +35,8 @@ public:
                 state.m_exist = false;
             }
             if (!state.m_exist) {
-                if (pkt.is_write_back_packet(m_peer_mask)) {
+                auto pkt_back = Packet {};
+                if (pkt.is_write_back_packet(m_peer_mask)) { // 写状态的包（回环状态）
                     if constexpr (OUTPUT) {
                         std::cout << "WRITE = " << pkt << std::endl; 
                     }
@@ -43,9 +44,11 @@ public:
                     state.m_dirty = true;
                     state.m_seq_id = next_seq_id(pkt.get_seq_id());
                     state.m_update_time = g_clock;
+                    pkt_back = pkt;
+                    pkt_back.is_write_state = true;
                 }
-                return { Packet {}, std::move(pkt) };
-            } else {
+                return { pkt_back, std::move(pkt) };
+            } else { // 在dTable中存在，需要回环
                 if (state.m_dirty) {
                     state.m_update_time = g_clock;
                     if (auto seq_id { pkt.get_seq_id() }; seq_id == state.m_seq_id) {

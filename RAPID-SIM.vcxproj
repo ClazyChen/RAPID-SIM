@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BlockQueue.ixx" />
+    <ClCompile Include="CircleLinkQueue.ixx" />
     <ClCompile Include="Device.ixx" />
     <ClCompile Include="Experiment.ixx" />
     <ClCompile Include="ExperimentBench.ixx" />
@@ -41,6 +42,7 @@
     <ClCompile Include="SeqIdMarker.ixx" />
     <ClCompile Include="SinglePeer.ixx" />
     <ClCompile Include="SongPipeline.ixx" />
+    <ClCompile Include="SongPir.ixx" />
     <ClCompile Include="SongPiw.ixx" />
     <ClCompile Include="VirtualPipeline.ixx" />
     <ClCompile Include="WriteBackGenerator.ixx" />
@@ -147,6 +149,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <StackReserveSize>268435456</StackReserveSize>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

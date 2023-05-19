@@ -23,4 +23,7 @@ public:
             return pkt;
         }
     }
+    std::byte get_nxt_seq_id(Packet pkt) {
+        return m_seq_id[pkt.m_key];
+    }
 };
