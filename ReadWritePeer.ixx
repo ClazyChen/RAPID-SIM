@@ -1,6 +1,3 @@
-module;
-#include <utility>
-
 export module rapid.ReadWritePeer;
 
 import rapid.Packet;
@@ -9,6 +6,7 @@ import rapid.Piw;
 import rapid.FrontScheduler;
 import rapid.VirtualPipeline;
 import rapid.Device;
+import std;
 
 export const size_t FB_PIR { 5 };
 export const size_t PIR_PIW { 10 };

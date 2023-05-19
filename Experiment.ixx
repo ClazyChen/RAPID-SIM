@@ -1,7 +1,3 @@
-module;
-#include <format>
-#include <iostream>
-
 export module rapid.experimental;
 
 export import rapid.experimental.RawPipeline;
@@ -12,6 +8,7 @@ import rapid.Packet;
 import rapid.Device;
 import rapid.PacketGenerator;
 import rapid.PacketAnalyzer;
+import std;
 
 export template <typename DeviceType, size_t K = 2>
     requires std::is_base_of_v<Device, DeviceType>

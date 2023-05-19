@@ -1,12 +1,8 @@
-module;
-#include <array>
-#include <sstream>
-#include <iostream>
-
 export module rapid.experimental.bench;
 
 import rapid.SongPipeline;
 import rapid.experimental;
+import std;
 
 export template <size_t RID1, size_t WID1, size_t RID2, size_t WID2, size_t EXPLICIT_CLOCK_MAX>
 class ExperimentBench {

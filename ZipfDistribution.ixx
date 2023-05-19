@@ -1,12 +1,6 @@
-module;
-#include <iostream>
-#include <algorithm>
-#include <cmath>
-#include <numeric>
-#include <random>
-#include <array>
-
 export module rapid.ZipfDistribution;
+
+import std;
 
 const bool use_true_zipf { false };
 

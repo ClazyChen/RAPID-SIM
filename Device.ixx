@@ -1,9 +1,7 @@
-module;
-#include <memory>
-
 export module rapid.Device;
 
 import rapid.Packet;
+import std;
 
 export class Device {
 public:

@@ -1,8 +1,6 @@
-module;
-#include <array>
-#include <iostream>
-
 export module rapid.RoundRobinQueue;
+
+import std;
 
 export template <size_t K>
 class RoundRobinQueue {

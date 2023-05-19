@@ -1,10 +1,7 @@
-module;
-#include <iostream>
-#include <array>
-
 export module rapid.PacketQueue;
 
 import rapid.Packet;
+import std;
 
 export template <size_t N>
     requires(std::has_single_bit(N))

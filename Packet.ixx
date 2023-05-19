@@ -1,8 +1,6 @@
-module;
-#include <cstddef>
-#include <iostream>
-
 export module rapid.Packet;
+
+import std;
 
 export class Packet {
     static int s_id;

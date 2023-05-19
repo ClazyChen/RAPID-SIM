@@ -1,9 +1,7 @@
-module;
-#include <array>
-
 export module rapid.BlockQueue;
 
 import rapid.Packet;
+import std;
 
 export template <typename T, size_t Len>
     requires(std::is_integral_v<T> || std::is_same_v<T, Packet>)

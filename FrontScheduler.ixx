@@ -1,11 +1,8 @@
-module;
-#include <utility>
-#include <iostream>
-
 export module rapid.FrontScheduler;
 
 import rapid.Packet;
 import rapid.PacketQueue;
+import std;
 
 export template <size_t N>
 class FrontScheduler {

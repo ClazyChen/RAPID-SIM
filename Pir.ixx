@@ -1,9 +1,3 @@
-module;
-#include <array>
-#include <bitset>
-
-#include <iostream>
-
 export module rapid.Pir;
 
 import rapid.Packet;
@@ -11,6 +5,7 @@ import rapid.PacketQueue;
 import rapid.LinkedPacketQueue;
 import rapid.BlockQueue;
 import rapid.RoundRobinQueue;
+import std;
 
 export template <std::byte DEST_MASK, size_t N, size_t CLOCK_MAX, size_t K = 2>
 class Pir {

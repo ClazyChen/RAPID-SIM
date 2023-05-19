@@ -1,15 +1,10 @@
-module;
-#include <array>
-#include <memory>
-#include <vector>
-#include <iostream>
-
 export module rapid.Pipeline;
 
 import rapid.Packet;
 import rapid.ReadWritePeer;
 import rapid.VirtualPipeline;
 import rapid.Device;
+import std;
 
 template <DeviceType IType, DeviceType OType>
 consteval size_t PIPELINE_LENGTH(size_t IID, size_t OID)

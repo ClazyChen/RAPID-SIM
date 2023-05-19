@@ -1,11 +1,7 @@
-module;
-#include <algorithm>
-#include <array>
-#include <iostream>
-
 export module rapid.PacketAnalyzer;
 
 import rapid.Packet;
+import std;
 
 export template <size_t K = 2>
 class PacketAnalyzer {

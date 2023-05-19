@@ -1,12 +1,9 @@
-module;
-#include <iostream>
-#include <utility>
-
 export module rapid.VirtualPipeline;
 
 import rapid.Packet;
 import rapid.BlockQueue;
 import rapid.Device;
+import std;
 
 export template <size_t Len>
     requires(Len > 0)

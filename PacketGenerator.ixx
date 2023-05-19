@@ -1,12 +1,10 @@
-module;
-#include <initializer_list>
-
 export module rapid.PacketGenerator;
 
 import rapid.ZipfDistribution;
 import rapid.GeometryDistribution;
 import rapid.WriteBackGenerator;
 import rapid.Packet;
+import std;
 
 export template <size_t K = 2>
 class PacketGenerator {

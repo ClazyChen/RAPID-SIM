@@ -1,10 +1,8 @@
-module;
-#include <array>
-
 export module rapid.SeqIdMarker;
 
 import rapid.Packet;
 import rapid.Device;
+import std;
 
 export template <size_t K = 2>
 class SeqIdMarker : public Device {

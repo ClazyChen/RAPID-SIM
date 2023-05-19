@@ -1,10 +1,7 @@
-module;
-#include <iostream>
-#include <array>
-
 export module rapid.SongPiw;
 
 import rapid.Packet;
+import std;
 
 export template <std::byte PEER_MASK, size_t CLOCK_MAX, size_t K = 2>
 class SongPiw {

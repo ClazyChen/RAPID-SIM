@@ -1,9 +1,3 @@
-module;
-#include <array>
-#include <memory>
-#include <vector>
-#include <iostream>
-
 export module rapid.SongPipeline;
 
 import rapid.Packet;
@@ -12,6 +6,7 @@ import rapid.Device;
 import rapid.VirtualPipeline;
 import rapid.SeqIdMarker;
 import rapid.SongPiw;
+import std;
 
 const size_t PROC_CYCLES { 15 };
 consteval size_t PIPELINE_LENGTH(size_t IID, size_t OID) {

@@ -1,11 +1,8 @@
-module;
-#include <bitset>
-#include <iostream>
-
 export module rapid.Piw;
 
 import rapid.Packet;
 import rapid.BlockQueue;
+import std;
 
 export template <std::byte PEER_MASK, size_t RING_LENGTH, size_t K = 2, bool ENABLE_UNWRITEABLE = false>
 class Piw {

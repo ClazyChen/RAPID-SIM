@@ -1,10 +1,7 @@
-module;
-#include <vector>
-#include <random>
-
 export module rapid.WriteBackGenerator;
 
 import rapid.Packet;
+import std;
 
 export class WriteBackGenerator {
     std::vector<std::pair<std::byte, double>> m_write_back_probabilities;

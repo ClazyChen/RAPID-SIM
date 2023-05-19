@@ -1,8 +1,5 @@
-module;
-#include <cmath>
-#include <random>
-
 export module rapid.GeometryDistribution;
+import std;
 
 export class GeometryDistribution {
     double m_lambda { 0.5 };
