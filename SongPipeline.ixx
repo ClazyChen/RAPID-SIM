@@ -8,14 +8,18 @@ import rapid.SeqIdMarker;
 import rapid.SongPiw;
 import std;
 
-const size_t PROC_CYCLES { 15 };
-consteval size_t PIPELINE_LENGTH(size_t IID, size_t OID) {
-    return (OID - IID + 1)* PROC_CYCLES;
+export const size_t PROC_CYCLES { 15 };
+export const size_t BACKBUS_CYCLES { 2 };
+export consteval size_t PIPELINE_LENGTH(size_t IID, size_t OID)
+{
+    return (OID - IID + 1) * PROC_CYCLES;
 }
-consteval size_t BACKBUS_LENGTH(size_t IID, size_t OID) {
-    return 2 + (OID - IID) * 2;
+export consteval size_t BACKBUS_LENGTH(size_t IID, size_t OID)
+{
+    return 2 + (OID - IID) * BACKBUS_CYCLES;
 }
-consteval size_t CLOCK_MAX(size_t IID, size_t OID) {
+export consteval size_t CLOCK_MAX(size_t IID, size_t OID)
+{
     return PIPELINE_LENGTH(IID, OID) + BACKBUS_LENGTH(IID, OID);
 }
 
@@ -36,10 +40,12 @@ class SongPipeline : public Device {
 
 public:
     SongPipeline() = default;
-    void initialize() {
+    void initialize()
+    {
         // no action
     }
-    Packet next(Packet&& pkt) override {
+    Packet next(Packet&& pkt) override
+    {
         if (!pkt.is_empty()) {
             m_front_buffer.enqueue(std::move(pkt));
         }
@@ -59,9 +65,4 @@ public:
         m_temp_pkt = m_backbus.next(std::move(bp));
         return std::move(pp);
     }
-
-    int FrontBufferSize() const {
-        return m_front_buffer.size();
-    }
-
 };

@@ -25,6 +25,7 @@
     <ClCompile Include="ExperimentBench.ixx" />
     <ClCompile Include="FrontScheduler.ixx" />
     <ClCompile Include="GeometryDistribution.ixx" />
+    <ClCompile Include="ImprovedSongPipeline.ixx" />
     <ClCompile Include="LinkedPacketQueue.ixx" />
     <ClCompile Include="OverlapPeer.ixx" />
     <ClCompile Include="Packet.ixx" />
@@ -41,6 +42,7 @@
     <ClCompile Include="SeqIdMarker.ixx" />
     <ClCompile Include="SinglePeer.ixx" />
     <ClCompile Include="SongPipeline.ixx" />
+    <ClCompile Include="SongPir.ixx" />
     <ClCompile Include="SongPiw.ixx" />
     <ClCompile Include="VirtualPipeline.ixx" />
     <ClCompile Include="WriteBackGenerator.ixx" />

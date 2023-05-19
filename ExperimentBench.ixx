@@ -1,6 +1,7 @@
 export module rapid.experimental.bench;
 
 import rapid.SongPipeline;
+import rapid.ImprovedSongPipeline;
 import rapid.experimental;
 import std;
 
@@ -15,8 +16,8 @@ public:
             #pragma omp parallel for
             for (int i { 1 }; i < 10; ++i) {
                 double write_back_ratio = static_cast<double>(i) / 10;
-                Experiment<SongPipeline<256, 32769, 8>, 32769> m_experiment;
-                //Experiment<SinglePeer<128, 0, 3, 32769, 8>, 32769> m_experiment;
+                auto m_experiment_ptr { std::make_unique<Experiment<ImprovedSongPipeline<256, 32769, 8>, 32769>>() };
+                auto& m_experiment { *m_experiment_ptr };
                 //std::cout << "lambda = " << lambda << " ; write_back_ratio = " << write_back_ratio << std::endl;
                 m_results[i] << " lambda = " << lambda << " ; write_back_ratio = " << write_back_ratio << std::endl;
                 m_experiment.set_lambda(lambda);

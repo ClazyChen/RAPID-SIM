@@ -10,6 +10,11 @@ class SeqIdMarker : public Device {
 
 public:
     SeqIdMarker() = default;
+
+    std::byte get_seq_id(unsigned short key) const {
+        return m_seq_id[key];
+    }
+
     Packet next(Packet&& pkt) override {
         if (pkt.is_empty() || pkt.get_seq_id() != std::byte(0)) {
             return pkt;

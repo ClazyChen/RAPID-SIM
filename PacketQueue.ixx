@@ -11,6 +11,7 @@ class PacketQueue {
     int m_back { 0 };
     bool m_empty { true };
     int m_size{ 0 };
+    const Packet m_empty_packet {};
 
 public:
     PacketQueue() = default;
@@ -24,6 +25,15 @@ public:
             m_empty = m_front == m_back;
             m_size--;
             return pkt;
+        }
+    }
+
+    const Packet& front() const {
+        if (m_empty) {
+            return m_empty_packet;
+        }
+        else {
+            return m_queue[m_front];
         }
     }
 
