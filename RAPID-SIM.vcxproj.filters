@@ -102,5 +102,8 @@
     <ClCompile Include="SongReadWritePeer.ixx">
       <Filter>资源文件</Filter>
     </ClCompile>
+    <ClCompile Include="SongPacketGenerator.ixx">
+      <Filter>资源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

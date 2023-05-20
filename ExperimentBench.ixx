@@ -13,7 +13,7 @@ public:
     void run_all(std::ostream& os, int packet_number) {
         for (double lambda{ 0.1 }; lambda <= 0.9 + 1e-8; lambda += 0.1) {
             std::array<std::stringstream, 10> m_results {};
-            #pragma omp parallel for
+            //#pragma omp parallel for
             for (int i { 1 }; i < 10; ++i) {
                 double write_back_ratio = static_cast<double>(i) / 10;
                 auto m_experiment_ptr { std::make_unique<Experiment<ImprovedSongPipeline<256, 32769, 4>, 32769>>() };
@@ -25,10 +25,12 @@ public:
                 m_experiment.reset();
                 m_experiment.run_until(packet_number);
                 m_experiment.report(m_results[i]);
+                break;
             }
             for (int i{ 1 }; i < 10; ++i) {
                 os << m_results[i].str();
             }
+            break;
         }
     }
 };

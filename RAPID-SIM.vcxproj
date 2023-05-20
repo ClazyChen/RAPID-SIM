@@ -41,6 +41,7 @@
     <ClCompile Include="RoundRobinQueue.ixx" />
     <ClCompile Include="SeqIdMarker.ixx" />
     <ClCompile Include="SinglePeer.ixx" />
+    <ClCompile Include="SongPacketGenerator.ixx" />
     <ClCompile Include="SongPipeline.ixx" />
     <ClCompile Include="SongPir.ixx" />
     <ClCompile Include="SongPiw.ixx" />

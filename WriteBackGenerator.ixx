@@ -28,3 +28,30 @@ public:
         return pkt;
     }
 };
+
+
+export template <size_t K = 2, size_t WB_GAP = 1>
+class FixedWriteBackGenerator {
+    std::vector<std::pair<std::byte, double>> m_write_back_probabilities;
+    std::array<size_t, K> flow_pkt_cnt; //记录该流已经接收的包的个数
+    size_t wb_gap{ WB_GAP }; //如果已经接受了这个流的wb_gap个包，则将该包设置为写回包
+public:
+    FixedWriteBackGenerator() = default;
+
+    void initialize(std::initializer_list<std::pair<int, double>> l) {
+        m_write_back_probabilities.clear();
+    }
+
+    Packet set_write_back(Packet&& pkt) {
+        auto flow_id = pkt.m_key;
+        if (flow_id != 0) {
+            flow_pkt_cnt[flow_id]++;
+            if (flow_pkt_cnt[flow_id] > wb_gap) {
+                flow_pkt_cnt[flow_id] = 0;
+                pkt.m_write_back_bitmap |= std::byte(1);
+            }
+        }
+        return pkt;
+    }
+
+};

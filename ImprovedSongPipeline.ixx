@@ -6,7 +6,7 @@ import rapid.PacketQueue;
 import rapid.SongReadWritePeer;
 import std;
 
-export template <size_t N, size_t K = 2, size_t PROC_NUM = 4, size_t FRONT_BUFFER_SIZE = 1024>
+export template <size_t N, size_t K = 2, size_t PROC_NUM = 4, size_t FRONT_BUFFER_SIZE = 8192>
 class ImprovedSongPipeline : public Device {
     PacketQueue<FRONT_BUFFER_SIZE> m_front;
     SongReadWritePeer<N, 0, PROC_NUM - 1, K> m_peer;
