@@ -16,7 +16,7 @@ public:
             #pragma omp parallel for
             for (int i { 1 }; i < 10; ++i) {
                 double write_back_ratio = static_cast<double>(i) / 10;
-                auto m_experiment_ptr { std::make_unique<Experiment<ImprovedSongPipeline<256, 32769, 8>, 32769>>() };
+                auto m_experiment_ptr { std::make_unique<Experiment<ImprovedSongPipeline<256, 32769, 4>, 32769>>() };
                 auto& m_experiment { *m_experiment_ptr };
                 //std::cout << "lambda = " << lambda << " ; write_back_ratio = " << write_back_ratio << std::endl;
                 m_results[i] << " lambda = " << lambda << " ; write_back_ratio = " << write_back_ratio << std::endl;

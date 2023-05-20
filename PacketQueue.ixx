@@ -10,7 +10,6 @@ class PacketQueue {
     int m_front { 0 };
     int m_back { 0 };
     bool m_empty { true };
-    int m_size{ 0 };
     const Packet m_empty_packet {};
 
 public:
@@ -23,16 +22,15 @@ public:
             auto pkt { std::move(m_queue[m_front]) };
             m_front = (m_front + 1) % N;
             m_empty = m_front == m_back;
-            m_size--;
             return pkt;
         }
     }
 
-    const Packet& front() const {
+    const Packet& front() const
+    {
         if (m_empty) {
             return m_empty_packet;
-        }
-        else {
+        } else {
             return m_queue[m_front];
         }
     }
@@ -48,16 +46,15 @@ public:
         }
         m_queue[m_back] = std::move(pkt);
         m_back = (m_back + 1) % N;
-
-        m_size++;
         return true;
     }
 
-    int size() const {
-        return m_size;
+    bool is_full() const
+    {
+        return !m_empty && m_front == m_back;
     }
 
-    constexpr bool is_empty() const
+    bool is_empty() const
     {
         return m_empty;
     }

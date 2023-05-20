@@ -46,6 +46,10 @@ public:
     int m_drop_packet_count { 0 };
     SongPir() = default;
 
+    bool is_full() const {
+        return m_incoming_buffer.is_full();
+    }
+
     void write_cam(Packet&& pkt) {
         if (!pkt.is_empty()) {
             if (pkt.get_seq_id() != m_seq_id_marker.get_seq_id(pkt.m_key)) {
@@ -63,7 +67,9 @@ public:
         bool incoming_packet_valid { false };
         if (const auto& pkt { m_incoming_buffer.front() }; !pkt.is_empty()) {
             if (m_dirty_cam.test(pkt.m_key)) {
-                enqueue(m_incoming_buffer.dequeue());
+                if (m_buffer_size < N) {
+                    enqueue(m_incoming_buffer.dequeue());
+                }
             } else {
                 incoming_packet_valid = true;    
             }

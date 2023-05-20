@@ -38,7 +38,7 @@ int main()
         experiment.run_until(1000000);
         experiment.report(std::cout);
     } else {
-        run_experiment_bench_T1<0, 2, 1, 3>(1000000);
+        run_experiment_bench_T1<0, 2, 1, 3>(10'000'000);
     }
     return 0;
 }

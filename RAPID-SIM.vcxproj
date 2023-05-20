@@ -44,6 +44,7 @@
     <ClCompile Include="SongPipeline.ixx" />
     <ClCompile Include="SongPir.ixx" />
     <ClCompile Include="SongPiw.ixx" />
+    <ClCompile Include="SongReadWritePeer.ixx" />
     <ClCompile Include="VirtualPipeline.ixx" />
     <ClCompile Include="WriteBackGenerator.ixx" />
     <ClCompile Include="ZipfDistribution.ixx" />
