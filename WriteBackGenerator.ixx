@@ -30,24 +30,31 @@ public:
 };
 
 
-export template <size_t K = 2, size_t WB_GAP = 1>
+export template <size_t K = 2>
 class FixedWriteBackGenerator {
-    std::vector<std::pair<std::byte, double>> m_write_back_probabilities;
-    std::array<size_t, K> flow_pkt_cnt; //记录该流已经接收的包的个数
-    size_t wb_gap{ WB_GAP }; //如果已经接受了这个流的wb_gap个包，则将该包设置为写回包
+    //std::vector<std::pair<std::byte, double>> m_write_back_probabilities;
+    std::array<size_t, K> m_flow_pkt_cnt; //记录该流已经接收的包的个数
+    size_t m_wb_gap{ 2 }; //如果已经接受了这个流的wb_gap个包，则将该包设置为写回包
 public:
     FixedWriteBackGenerator() = default;
 
+    void initialize(size_t wb_gap) {
+        // m_write_back_probabilities.clear();
+        m_wb_gap = wb_gap;
+    }
+
     void initialize(std::initializer_list<std::pair<int, double>> l) {
-        m_write_back_probabilities.clear();
+        std::cout << "used wrong initialize" << std::endl;
+        //m_write_back_probabilities.clear();
     }
 
     Packet set_write_back(Packet&& pkt) {
+        // std::cout << m_wb_gap << std::endl;
         auto flow_id = pkt.m_key;
         if (flow_id != 0) {
-            flow_pkt_cnt[flow_id]++;
-            if (flow_pkt_cnt[flow_id] > wb_gap) {
-                flow_pkt_cnt[flow_id] = 0;
+            m_flow_pkt_cnt[flow_id]++;
+            if (m_flow_pkt_cnt[flow_id] > m_wb_gap) {
+                m_flow_pkt_cnt[flow_id] = 0;
                 pkt.m_write_back_bitmap |= std::byte(1);
             }
         }

@@ -41,7 +41,6 @@
     <ClCompile Include="RoundRobinQueue.ixx" />
     <ClCompile Include="SeqIdMarker.ixx" />
     <ClCompile Include="SinglePeer.ixx" />
-    <ClCompile Include="SongPacketGenerator.ixx" />
     <ClCompile Include="SongPipeline.ixx" />
     <ClCompile Include="SongPir.ixx" />
     <ClCompile Include="SongPiw.ixx" />
@@ -151,6 +150,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <StackReserveSize>1073741824</StackReserveSize>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

@@ -15,7 +15,8 @@ export template <typename DeviceType, size_t K = 2>
 class Experiment {
     constexpr const static int m_extra_cycle_count = 128000;
 
-    PacketGenerator<K> m_packet_generator;
+    //PacketGenerator<K> m_packet_generator;
+    SimplePacketGenerator<K> m_packet_generator;
     PacketAnalyzer<K> m_packet_analyzer;
     DeviceType m_device;
 
@@ -60,9 +61,17 @@ public:
         m_packet_generator.set_lambda(lambda);
     }
 
+    void set_arr_period(size_t arr_period) {
+        m_packet_generator.set_arr_period(arr_period);
+    }
+
     void initialize_write_back_generator(std::initializer_list<std::pair<int, double>> l)
     {
         m_packet_generator.initialize_write_back_generator(l);
+    }
+
+    void initialize_write_back_generator(size_t wb_gap) {
+        m_packet_generator.initialize_write_back_generator(wb_gap);
     }
 
     void run(int cycle_count)
@@ -97,6 +106,7 @@ public:
         m_tx_packet_count = 0;
         m_target_count = 0;
         m_packet_analyzer.reset();
+        m_packet_generator.reset();
         m_device.reset();
     }
 };
