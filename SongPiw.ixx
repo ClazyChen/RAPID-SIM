@@ -17,12 +17,18 @@ class SongPiw {
     };
 
     std::array<DirtyState, K> m_dirty_state {};
+    Packet m_pkt_to_write {};
 
 public:
     SongPiw() = default;
 
+    Packet get_pkt_to_write() const {
+        return m_pkt_to_write;
+    }
+
     std::pair<Packet, Packet> next(Packet&& pkt)
     {
+        m_pkt_to_write = Packet {};
         if (pkt.is_empty()) {
             return { pkt, pkt };
         } else {
@@ -40,6 +46,7 @@ public:
                     state.m_dirty = true;
                     state.m_seq_id = next_seq_id(pkt.get_seq_id());
                     state.m_update_time = g_clock;
+                    m_pkt_to_write = pkt;
                 }
                 return { Packet {}, std::move(pkt) };
             } else {

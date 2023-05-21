@@ -37,6 +37,7 @@ public:
         auto pipe_pkt { m_pipeline.next(std::move(pir_pkt)) };
         auto [bp, pp] { m_piw.next(std::move(pipe_pkt)) };
         m_temp_pkt = m_backbus.next(std::move(bp));
+        m_pir.write_cam(m_piw.get_pkt_to_write());
         return std::move(pp);
     }
 };
