@@ -62,6 +62,16 @@ export std::byte next_seq_id(std::byte seq_id) {
     return result;
 }
 
+export std::byte last_seq_id(std::byte seq_id) {
+    int last{ static_cast<int>(seq_id) - 1 };
+    last %= 256;
+    if (last == 0) {
+        last = 255;
+    }
+    std::byte result {static_cast<std::byte>(last)};
+    return result;
+}
+
 export std::ostream& operator<<(std::ostream& os, const Packet& pkt)
 {
     os << "Packet { id: " << pkt.m_id << ", key: " << pkt.m_key << ", backward_tag_bitmap: " << static_cast<int>(pkt.m_backward_tag_bitmap) << ", write_back_bitmap: " << static_cast<int>(pkt.m_write_back_bitmap) << " }";

@@ -18,7 +18,7 @@ export consteval size_t BACKBUS_LENGTH(size_t IID, size_t OID)
 {
     return 2 + (OID - IID) * BACKBUS_CYCLES;
 }
-export consteval size_t CLOCK_MAX(size_t IID, size_t OID)
+export consteval size_t CLOCK_MAX_2(size_t IID, size_t OID)
 {
     return PIPELINE_LENGTH(IID, OID) + BACKBUS_LENGTH(IID, OID);
 }
@@ -28,7 +28,7 @@ class SongPipeline : public Device {
     constexpr const static size_t m_proc_num { PROC_NUM };
     constexpr const static size_t m_pipeline_length { PIPELINE_LENGTH(1, PROC_NUM) };
     constexpr const static size_t m_backbus_length { BACKBUS_LENGTH(1, PROC_NUM) };
-    constexpr const static size_t m_clock_max { CLOCK_MAX(1, PROC_NUM) };
+    constexpr const static size_t m_clock_max { CLOCK_MAX_2(1, PROC_NUM) };
 
     PacketQueue<N> m_front_buffer;
     SeqIdMarker<K> m_seq_id_marker;

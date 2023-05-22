@@ -38,15 +38,23 @@ int main()
         // experiment.set_lambda(0.9);
         
         //experiment.initialize_write_back_generator({ { 0, 0.9 }, { 1, 0.1 } });
-        for (int j = 10; j >= 2; j--) {
+        std::ofstream os("result.txt");
+        for (int j = 9; j >= 1; j--) {
+            std::array<std::stringstream, 10> m_results {};
             for (int i = 9; i >= 1; i--) {
-                std::cout << "arr_period " << j << " ; wb_gap " << i << std::endl;
+                //std::cout << "arr_period " << j << " ; wb_gap " << i << std::endl;
                 Experiment<ImprovedSongPipeline<256, 32769, 4, 8192>, 32769> experiment;
+                m_results[i] << " arr_period = " << j << " ; wb_gap = " << i << std::endl;
                 experiment.set_arr_period(j);
                 experiment.initialize_write_back_generator(i);
                 experiment.reset();
-                experiment.run_until(8192);
-                experiment.report(std::cout);
+                experiment.run_until(100000);
+               // experiment.report(std::cout);
+                experiment.report(m_results[i]);
+                experiment.print_info();
+            }
+            for (int i{ 1 }; i < 10; ++i) {
+                os << m_results[i].str();
             }
         }
 

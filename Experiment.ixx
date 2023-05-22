@@ -13,10 +13,10 @@ import std;
 export template <typename DeviceType, size_t K = 2>
     requires std::is_base_of_v<Device, DeviceType>
 class Experiment {
-    constexpr const static int m_extra_cycle_count = 128000;
+    constexpr const static int m_extra_cycle_count = 600000;
 
-    //PacketGenerator<K> m_packet_generator;
-    SimplePacketGenerator<K> m_packet_generator;
+    PacketGenerator<K> m_packet_generator;
+    //SimplePacketGenerator<K> m_packet_generator;
     PacketAnalyzer<K> m_packet_analyzer;
     DeviceType m_device;
 
@@ -108,5 +108,9 @@ public:
         m_packet_analyzer.reset();
         m_packet_generator.reset();
         m_device.reset();
+    }
+
+    void print_info() {
+        m_device.print_info();
     }
 };

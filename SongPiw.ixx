@@ -18,19 +18,27 @@ class SongPiw {
 
     std::array<DirtyState, K> m_dirty_state {};
     Packet m_pkt_to_write {};
+    std::ofstream piw_info_out;
+    size_t cnt_cycle{ 0 };
 
 public:
-    SongPiw() = default;
+    SongPiw() {
+        piw_info_out.open("./piw_info.txt", std::ios_base::out);
+        //std::cout << "clock max " << m_clock_max << std::endl;
+    };
 
     Packet get_pkt_to_write() const {
         return m_pkt_to_write;
     }
 
-    std::pair<Packet, Packet> next(Packet&& pkt)
+    std::pair< std::pair<Packet, Packet>, Packet> next(Packet&& pkt)
     {
+        cnt_cycle++;
+        //std::cout << m_clock_max << std::endl;
         m_pkt_to_write = Packet {};
         if (pkt.is_empty()) {
-            return { pkt, pkt };
+            piw_info_out << "cycle: " << cnt_cycle << " bp_pkt: " << pkt.m_key << " wb_pkt: " << pkt.m_key << " pp_pkt: " << pkt.m_key << std::endl;
+            return { {pkt, pkt}, pkt };
         } else {
             auto& state { m_dirty_state[pkt.m_key] };
             if (state.m_update_time + m_clock_max < g_clock) {
@@ -48,7 +56,8 @@ public:
                     state.m_update_time = g_clock;
                     m_pkt_to_write = pkt;
                 }
-                return { Packet {}, std::move(pkt) };
+                piw_info_out << "cycle: " << cnt_cycle << " bp_pkt: " << 0 << " wb_pkt: " << m_pkt_to_write.m_key << " pp_pkt: " << pkt.m_key << std::endl;
+                return { { Packet {}, std::move(m_pkt_to_write)}, std::move(pkt) };
             } else {
                 if (state.m_dirty) {
                     state.m_update_time = g_clock;
@@ -61,13 +70,16 @@ public:
                         if (pkt.is_write_back_packet(m_peer_mask)) {
                             state.m_update_time = g_clock;
                             state.m_dirty = true;
+                            m_pkt_to_write = pkt;
                         }
-                        return { Packet {}, std::move(pkt) };
+                        piw_info_out << "cycle: " << cnt_cycle << " bp_pkt: " << 0 << " wb_pkt: " << m_pkt_to_write.m_key << " pp_pkt: " << pkt.m_key << std::endl;
+                        return { { Packet {}, std::move(m_pkt_to_write)}, std::move(pkt)};
                     } else {
                         state.m_update_time = g_clock;
                     }
                 }
-                return { std::move(pkt), Packet {} };
+                piw_info_out << "cycle: " << cnt_cycle << " bp_pkt: " << pkt.m_key << " wb_pkt: " << 0 << " pp_pkt: " << 0 << std::endl;
+                return { {std::move(pkt), Packet{}}, Packet {} };
             }
         }
     }

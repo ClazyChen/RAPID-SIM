@@ -7,6 +7,7 @@ export class Device {
 public:
     virtual Packet next(Packet&&) = 0;
     virtual void reset() { }
+    virtual void print_info() { }
 };
 
 export class DualPortDevice {
@@ -45,4 +46,5 @@ public:
         }
         return Packet {};
     }
+    void print_info() { }
 };

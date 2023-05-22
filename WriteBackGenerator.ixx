@@ -34,8 +34,9 @@ export template <size_t K = 2>
 class FixedWriteBackGenerator {
     //std::vector<std::pair<std::byte, double>> m_write_back_probabilities;
     std::array<size_t, K> m_flow_pkt_cnt; //记录该流已经接收的包的个数
-    size_t m_wb_gap{ 2 }; //如果已经接受了这个流的wb_gap个包，则将该包设置为写回包
+     //如果已经接受了这个流的wb_gap个包，则将该包设置为写回包
 public:
+    size_t m_wb_gap{ 9 };
     FixedWriteBackGenerator() = default;
 
     void initialize(size_t wb_gap) {

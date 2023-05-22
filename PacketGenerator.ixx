@@ -49,7 +49,7 @@ import std;
 
 export template <size_t K = 2>
 class PacketGenerator {
-    TunedZipfDistribution<K, 1, 100000, 10, 1, 5, 20> m_zipf; // to control the key
+    TunedZipfDistribution<K, 1, 100000, 10, 2, 5, 20> m_zipf; // to control the key
     //ZipfDistribution<K> m_zipf;
     GeometryDistribution m_geo; // to control the flow
     FixedWriteBackGenerator<K> m_write_back_generator;
@@ -88,7 +88,7 @@ public:
 
     void reset() {
         
-        //fout.open("./packet_seq.txt", std::ios_base::out);
+        fout.open("./packet_seq.txt", std::ios_base::out);
         m_zipf.reset();
     }
 
@@ -109,12 +109,12 @@ public:
             ++m_tx_packet_count;
             auto flow_id = m_zipf.next();
             auto pkt = m_write_back_generator.set_write_back(Packet{ flow_id });
-            //fout << flow_id << " " << (int)pkt.m_write_back_bitmap<< std::endl;
+            fout << flow_id << " " << (int)pkt.m_write_back_bitmap<< std::endl;
             return pkt;
         }
         else {
             --m_clock;
-            //fout << 0 << std::endl;
+            fout << 0 << std::endl;
             return Packet{};
         }
     }
@@ -122,8 +122,13 @@ public:
 
 export template <size_t K = 2>
 class SimplePacketGenerator {
+    FixedWriteBackGenerator<K> m_write_back_generator;
+    std::ofstream fout;
 public:
     int m_tx_packet_count { 0 };
+    int wb_gap{ 1 };
+    int m_clock{ 0 };
+    int m_arr_period{ 10 };
     SimplePacketGenerator() = default;
     SimplePacketGenerator(double lambda, double alpha = 1.01)
     {
@@ -144,6 +149,7 @@ public:
     }
 
     void reset() {
+        fout.open("./packet_seq.txt", std::ios_base::out);
     }
     Packet next()
     {
@@ -151,19 +157,28 @@ public:
         //    m_clock = m_arrive_period - 1;
         //    ++m_tx_packet_count;
         //    auto flow_id = m_zipf.next();
-        //    auto pkt = m_write_back_generator.set_write_back(Packet{ flow_id });
+        //    auto pkt = m_write_back_generator.set_write_back(packet{ flow_id });
         //    //fout << flow_id << " " << (int)pkt.m_write_back_bitmap<< std::endl;
         //    return pkt;
         //}
         //else {
         //    --m_clock;
         //    //fout << 0 << std::endl;
-        //    return Packet{};
+        //    return packet{};
         //}
-        ++m_tx_packet_count;
-        unsigned short flow_id = 1;
-        auto pkt = Packet{ flow_id };
-        pkt.m_write_back_bitmap |= std::byte(1);
-        return pkt;
+        //std::cout << m_arr_period << std::endl;
+        if (m_clock == 0) {
+            m_clock = m_arr_period - 1;
+            ++m_tx_packet_count;
+            //std::cout << m_write_back_generator.m_wb_gap << std::endl;
+            auto pkt = m_write_back_generator.set_write_back(Packet{ 1 });
+            fout<< 1 << " " << (int)pkt.m_write_back_bitmap << std::endl;
+            return pkt;
+        }
+        else {
+            m_clock--;
+            fout << 0 << std::endl;
+            return Packet{};
+        }
     }
 };
