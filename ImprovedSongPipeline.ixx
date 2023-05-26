@@ -11,9 +11,11 @@ class ImprovedSongPipeline : public Device {
     PacketQueue<FRONT_BUFFER_SIZE> m_front;
     SongReadWritePeer<N, 0, PROC_NUM - 1, K> m_peer;
     std::ofstream front_buffer_info_out;
+   // std::ofstream time_elapse_info;
 
     size_t cnt_cycle{ 0 };
 
+    //size_t total_process_time{ 0 };
 
 public:
     size_t front_buffer_cnt_rcv{ 0 };
@@ -25,6 +27,7 @@ public:
     void initialize()
     {
         front_buffer_info_out.open("./fb_size.txt", std::ios_base::out);
+       // time_elapse_info.open("./time_out.txt", std::ios_base::out);
         // no action
     }
     Packet next(Packet&& pkt) override
@@ -32,8 +35,9 @@ public:
         if (!pkt.is_empty()) {
             front_buffer_cnt_rcv++;
         }
-        front_buffer_info_out << "cycle: " << cnt_cycle++ << " front size: " << m_front.size() << std::endl;
+        //front_buffer_info_out << "cycle: " << cnt_cycle++ << " front size: " << m_front.size() << std::endl;
         if (!pkt.is_empty()) {
+            //pkt.set_timestamp();
             m_front.enqueue(std::move(pkt));
         }
         Packet front_pkt {};
@@ -46,6 +50,9 @@ public:
         }
         auto peer_pkt = m_peer.next(std::move(front_pkt));
         if (!peer_pkt.is_empty()) {
+            //size_t process_time = peer_pkt.get_time_offset() + 2;
+            //total_process_time += process_time;
+            //time_elapse_info << "packet num: " << peer_cnt_snd << " elapse time: " << process_time << std::endl;
             peer_cnt_snd++;
         }
         return peer_pkt;
@@ -54,6 +61,11 @@ public:
     void print_info() {
         std::cout << "front_buffer rcv: " << front_buffer_cnt_rcv << " snd: " << front_buffer_cnt_snd << std::endl;
         std::cout << "wr_peer rcv " << peer_cnt_rcv << " snd: " << peer_cnt_snd << std::endl;
+        //std::cout << "average_elapse_time: " << get_average_elapse_time() << std::endl;
         m_peer.print_info();
     }
+
+    //size_t get_average_elapse_time() {
+    //    return total_process_time / peer_cnt_snd;
+    //}
 };

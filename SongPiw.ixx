@@ -37,7 +37,7 @@ public:
         //std::cout << m_clock_max << std::endl;
         m_pkt_to_write = Packet {};
         if (pkt.is_empty()) {
-            piw_info_out << "cycle: " << cnt_cycle << " bp_pkt: " << pkt.m_key << " wb_pkt: " << pkt.m_key << " pp_pkt: " << pkt.m_key << std::endl;
+            //piw_info_out << "cycle: " << cnt_cycle << " bp_pkt: " << pkt.m_key << " wb_pkt: " << pkt.m_key << " pp_pkt: " << pkt.m_key << std::endl;
             return { {pkt, pkt}, pkt };
         } else {
             auto& state { m_dirty_state[pkt.m_key] };
@@ -56,7 +56,7 @@ public:
                     state.m_update_time = g_clock;
                     m_pkt_to_write = pkt;
                 }
-                piw_info_out << "cycle: " << cnt_cycle << " bp_pkt: " << 0 << " wb_pkt: " << m_pkt_to_write.m_key << " pp_pkt: " << pkt.m_key << std::endl;
+                //piw_info_out << "cycle: " << cnt_cycle << " bp_pkt: " << 0 << " wb_pkt: " << m_pkt_to_write.m_key << " pp_pkt: " << pkt.m_key << std::endl;
                 return { { Packet {}, std::move(m_pkt_to_write)}, std::move(pkt) };
             } else {
                 if (state.m_dirty) {
@@ -72,13 +72,13 @@ public:
                             state.m_dirty = true;
                             m_pkt_to_write = pkt;
                         }
-                        piw_info_out << "cycle: " << cnt_cycle << " bp_pkt: " << 0 << " wb_pkt: " << m_pkt_to_write.m_key << " pp_pkt: " << pkt.m_key << std::endl;
+                        //piw_info_out << "cycle: " << cnt_cycle << " bp_pkt: " << 0 << " wb_pkt: " << m_pkt_to_write.m_key << " pp_pkt: " << pkt.m_key << std::endl;
                         return { { Packet {}, std::move(m_pkt_to_write)}, std::move(pkt)};
                     } else {
                         state.m_update_time = g_clock;
                     }
                 }
-                piw_info_out << "cycle: " << cnt_cycle << " bp_pkt: " << pkt.m_key << " wb_pkt: " << 0 << " pp_pkt: " << 0 << std::endl;
+                //piw_info_out << "cycle: " << cnt_cycle << " bp_pkt: " << pkt.m_key << " wb_pkt: " << 0 << " pp_pkt: " << 0 << std::endl;
                 return { {std::move(pkt), Packet{}}, Packet {} };
             }
         }

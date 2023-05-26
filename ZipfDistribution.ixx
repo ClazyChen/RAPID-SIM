@@ -60,9 +60,9 @@ public:
 export template <size_t K = 2, size_t FC_NUM = 1, size_t N = 1000000, size_t PKT_GAP = 10, size_t FIXED_FLOW_NUM = 10, size_t BURST_GAP = 1, int BURST_RATE = 20> 
 class TunedZipfDistribution {
     constexpr const static size_t m_flow_count { K - 1 };
-    constexpr const static size_t m_flow_cluster_num { FC_NUM };
-    constexpr const static size_t m_pkt_gap { PKT_GAP };
-    constexpr const static size_t m_burst_gap { BURST_GAP };
+    size_t m_flow_cluster_num { FC_NUM };
+    size_t m_pkt_gap { PKT_GAP };
+    size_t m_burst_gap { BURST_GAP };
     double m_burst_rate{ (double) BURST_RATE / 100};
     double m_alpha{ use_true_zipf ? 1.01 : 1.0 };
     std::array<double, m_flow_count> m_probabilities;
@@ -77,13 +77,23 @@ class TunedZipfDistribution {
     
     size_t cnt_pkt{ 0 };
 
-    size_t fixed_flow_num{ FIXED_FLOW_NUM };
+    size_t m_fixed_flow_num{ FIXED_FLOW_NUM };
     std::ofstream fout;
     std::string zipf_filename;
+    
+    //void initialize_parameter(size_t fc_num, size_t fixed_flow_num, size_t pkt_gap, size_t burst_gap, double burst_rate) {
+    //    m_flow_cluster_num = fc_num;
+    //    m_fixed_flow_num = fixed_flow_num;
+    //    m_pkt_gap = pkt_gap;
+    //    m_burst_gap = burst_gap;
+    //    m_burst_rate = burst_rate;
+    //}
+    
     void initialize()
     {
+        //initialize_parameter(fc_num, fixed_flow_num, pkt_gap, burst_gap, burst_rate);
         std::ifstream zipf_in;
-        zipf_filename = std::format("zipf_{}_{}_{}_{}_{}.txt", m_flow_cluster_num, fixed_flow_num, m_pkt_gap, m_burst_gap, BURST_RATE);
+        zipf_filename = std::format("zipf_{}_{}_{}_{}_{}.txt", m_flow_cluster_num, m_fixed_flow_num, m_pkt_gap, m_burst_gap, (int)(m_burst_rate * 100));
         zipf_in.open(zipf_filename, std::ios_base::in);
         if (zipf_in.good()) {
             std::string temp;
@@ -96,7 +106,7 @@ class TunedZipfDistribution {
             std::cout << "zipf trace input" << std::endl;
         }
         else {
-            std::cout << "initialize zipf" << std::endl;
+            std::cout << "initialize zipf " << m_flow_cluster_num << " " << m_fixed_flow_num << " " << m_pkt_gap << " " << m_burst_gap << " " << m_burst_rate << std::endl;
             m_sum = 0.0;
             for (size_t i{ 0 }; i < m_flow_count;) {
                 //m_probabilities.at(i) = 1.0 / std::pow(i + 1, m_alpha);
@@ -130,7 +140,7 @@ class TunedZipfDistribution {
             }
 
             //packet pool中，id为1到fixed_flow_num的流为大流，让这些流的数据包间隔相等，给这些流的包分配位置
-            for (int big_flow_id = 1; big_flow_id < fixed_flow_num + 1; big_flow_id++) {
+            for (int big_flow_id = 1; big_flow_id < m_fixed_flow_num + 1; big_flow_id++) {
                 auto pkt_num = m_flow_pkt_cnt[big_flow_id];
                 auto burst_pkt_num = (int)(pkt_num * m_burst_rate); //突发到达的包数（和前一个包间隔很短到达）
                 auto normal_pkt_num = pkt_num - burst_pkt_num;
@@ -161,7 +171,7 @@ class TunedZipfDistribution {
             //为剩余的流的包分配位置
             int pos_num = 0;
             for (int i = 0; i < N; i++) {
-                if (m_packet_pool[i] >= fixed_flow_num + 1) {
+                if (m_packet_pool[i] >= m_fixed_flow_num + 1) {
                     while (m_out_pkt_seq[pos_num] != 0) {
                         pos_num++;
                         if (pos_num >= N) {
@@ -194,11 +204,27 @@ class TunedZipfDistribution {
 public:
     TunedZipfDistribution()
     {
-        initialize();
+        //initialize();
     }
     TunedZipfDistribution(double alpha)
         : m_alpha(alpha)
     {
+        //initialize();
+    }
+    TunedZipfDistribution(size_t fc_num, size_t fixed_flow_num, size_t pkt_gap, size_t burst_gap, double burst_rate) 
+        : m_flow_cluster_num(fc_num), m_fixed_flow_num(fixed_flow_num), m_pkt_gap(pkt_gap), m_burst_gap(burst_gap), m_burst_rate(burst_rate) {
+        //initialize();
+    }
+
+    void set_parameter_and_init(size_t fc_num, size_t fixed_flow_num, size_t pkt_gap, size_t burst_gap, double burst_rate) {
+        m_flow_cluster_num = fc_num;
+        m_fixed_flow_num = fixed_flow_num;
+        m_pkt_gap = pkt_gap;
+        m_burst_gap = burst_gap;
+        m_burst_rate = burst_rate;
+        initialize();
+    }
+    void set_parameter_and_init() {
         initialize();
     }
 

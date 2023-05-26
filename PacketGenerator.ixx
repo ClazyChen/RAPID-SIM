@@ -86,6 +86,14 @@ public:
         m_write_back_generator.initialize(l);
     }
 
+    void initialize_zipf(size_t fc_num, size_t fixed_flow_num, size_t pkt_gap, size_t burst_gap, double burst_rate) {
+        m_zipf.set_parameter_and_init(fc_num, fixed_flow_num, pkt_gap, burst_gap, burst_rate);
+    }
+
+    void initialize_zipf() {
+        m_zipf.set_parameter_and_init();
+    }
+
     void reset() {
         
         fout.open("./packet_seq.txt", std::ios_base::out);
@@ -105,7 +113,8 @@ public:
         //}
 
         if (m_clock == 0) {
-            m_clock = m_arrive_period - 1;
+            //m_clock = m_arrive_period - 1;
+            m_clock = m_geo.next() - 1;
             ++m_tx_packet_count;
             auto flow_id = m_zipf.next();
             auto pkt = m_write_back_generator.set_write_back(Packet{ flow_id });

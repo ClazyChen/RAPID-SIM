@@ -2,6 +2,9 @@ export module rapid.Packet;
 
 import std;
 
+export int g_clock{ 0 };
+export constexpr const bool OUTPUT{ false };
+
 export class Packet {
     static int s_id;
 
@@ -10,6 +13,7 @@ public:
     unsigned short m_key { 0 };
     std::byte m_backward_tag_bitmap { 0 };
     std::byte m_write_back_bitmap { 0 };
+    int enter_timestamp{ 0 };
     Packet() = default;
     Packet(unsigned short key)
         : m_id(1)
@@ -48,6 +52,14 @@ public:
     {
         return m_backward_tag_bitmap;
     }
+
+    void set_timestamp() {
+        enter_timestamp = g_clock;
+    }
+
+    int get_time_offset() {
+        return g_clock - enter_timestamp;
+    }
 };
 
 int Packet::s_id { 0 };
@@ -78,5 +90,3 @@ export std::ostream& operator<<(std::ostream& os, const Packet& pkt)
     return os;
 }
 
-export int g_clock { 0 };
-export constexpr const bool OUTPUT { false };

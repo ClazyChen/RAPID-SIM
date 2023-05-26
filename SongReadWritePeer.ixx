@@ -29,44 +29,65 @@ export template <size_t N, size_t RID, size_t WID, size_t K = 2>
 class SongReadWritePeer : public Device {
     constexpr const static size_t m_pipeline_length { PIPELINE_LENGTH(RID, WID) - FRONT_CYCLES };
     constexpr const static size_t m_backbus_length { BACKBUS_LENGTH(RID, WID) };
-    constexpr const static size_t m_clock_max { CLOCK_MAX_2(RID, WID) - FRONT_CYCLES };
+    constexpr const static size_t m_clock_max { CLOCK_MAX_2(RID, WID) - FRONT_CYCLES + 1 };
 
     VirtualPipeline<FRONT_CYCLES> m_front;
     VirtualPipeline<m_pipeline_length> m_pipeline;
     VirtualPipeline<m_backbus_length> m_backbus;
     VirtualPipeline<m_backbus_length> m_wb_bus;
     SongPir<N, K> m_pir;
+    //SongPir_MQ<N, K> m_pir;
+    //SongPir_RR<N, K> m_pir;
+    //BasePir m_pir;
+
     SongPiw<std::byte(1 << RID), m_clock_max, K> m_piw;
     Packet m_temp_pkt;
     Packet m_wb_pkt;
     std::ofstream w_r_peer_out;
     size_t cnt_cycle{ 0 };
 
+    Packet m_front_out_pkt;
+
 
 public:
     SongReadWritePeer() {
         w_r_peer_out.open("./wr_info.txt", std::ios_base::out);
+        //if (PIR_TYPE == 0) {
+        //    m_pir = SongPir<N, K>();
+        //}
+        //else if (PIR_TYPE == 1) {
+        //    m_pir = SongPir_MQ<N, K>();
+        //}
+        //else if (PIR_TYPE == 2) {
+        //    m_pir = SongPir_RR<N, K>();
+        //}
         //std::cout << "pipeline length " << PIPELINE_LENGTH(RID, WID) << " back bus length " << BACKBUS_LENGTH(RID, WID) << "clock max " << CLOCK_MAX_2(RID, WID) << std::endl;
     };
 
+    //bool is_full() const {
+    //    return m_pir.is_full();
+    //}
+
     bool is_full() const {
-        return m_pir.is_full();
+        return m_pir.is_full(m_front_out_pkt);
     }
 
     Packet next(Packet&& pkt) override {
         //assert(0);
         cnt_cycle++;
         //如果pir的 buffer满了， front_pipeline需要停顿
-        auto front_pkt = m_pir.is_full() ? Packet {} : m_front.next(std::move(pkt));
+        bool is_stall = m_pir.is_full(m_front_out_pkt);
+        auto front_pkt = is_stall ? Packet {} : m_front_out_pkt;
+        m_front_out_pkt = is_stall ? m_front_out_pkt : m_front.next(std::move(pkt));
         m_pir.write_cam(std::move(m_wb_pkt));
         auto pir_pkt{ m_pir.next(std::move(front_pkt), std::move(m_temp_pkt)) };
         auto pipe_pkt{ m_pipeline.next(std::move(pir_pkt)) };
         auto [bp_wb, pp] { m_piw.next(std::move(pipe_pkt)) };
         auto [bp, wb] { bp_wb };
-        w_r_peer_out << "cycle: " << cnt_cycle << " w_bp_pkt: " << bp.m_key << " w_wb_pkt: " << wb.m_key << " pp_pkt: " << pp.m_key ;
+        //w_r_peer_out << "cycle: " << cnt_cycle << " w_bp_pkt: " << bp.m_key << " w_wb_pkt: " << wb.m_key << " pp_pkt: " << pp.m_key ;
         m_temp_pkt = m_backbus.next(std::move(bp));
         m_wb_pkt = m_wb_bus.next(std::move(wb));
-        w_r_peer_out << " r_bp_pkt: " << m_temp_pkt.m_key << "  r_wb_pkt: " << m_wb_pkt.m_key << std::endl;
+        //w_r_peer_out << " r_bp_pkt: " << m_temp_pkt.m_key << "  r_wb_pkt: " << m_wb_pkt.m_key << std::endl;
         return std::move(pp);
     }
 

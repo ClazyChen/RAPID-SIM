@@ -20,9 +20,8 @@ public:
             return pkt;
         }
         else {
-            auto m_seq { m_seq_id[pkt.m_key] };
-            m_seq_id[pkt.m_key] = next_seq_id(m_seq);
-            pkt.set_seq_id(m_seq);
+            m_seq_id[pkt.m_key] = next_seq_id(m_seq_id[pkt.m_key]);
+            pkt.set_seq_id(m_seq_id[pkt.m_key]);
             return pkt;
         }
     }
