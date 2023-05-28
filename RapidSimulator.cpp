@@ -57,7 +57,7 @@ int main(int argc, char const* argv[])
             std::array<std::stringstream, 10> m_results {};
             for (int i = 9; i >= 0; i--) {
                 std::cout << "lambda " << lambda << " ; wb_gap " << i << std::endl;
-                Experiment<ImprovedSongPipeline<256, 32769, 4, 8192>, 32769> experiment;
+                Experiment<ImprovedSongPipeline<256, 32769, 4, 1024>, 32769> experiment;
                 //m_results[i] << " arr_period = " << j << " ; wb_gap = " << i << std::endl;
                 m_results[i] << " lambda = " << lambda << " ; wb_gap = " << i << std::endl;
                 //experiment.set_arr_period(j);

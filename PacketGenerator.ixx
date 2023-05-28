@@ -49,7 +49,7 @@ import std;
 
 export template <size_t K = 2>
 class PacketGenerator {
-    TunedZipfDistribution<K, 1, 100000, 10, 2, 5, 20> m_zipf; // to control the key
+    TunedZipfDistribution<K, 3, 100000, 10, 3, 2, 20> m_zipf; // to control the key
     //ZipfDistribution<K> m_zipf;
     GeometryDistribution m_geo; // to control the flow
     FixedWriteBackGenerator<K> m_write_back_generator;
@@ -113,8 +113,8 @@ public:
         //}
 
         if (m_clock == 0) {
-            //m_clock = m_arrive_period - 1;
-            m_clock = m_geo.next() - 1;
+            m_clock = m_arrive_period - 1;
+            //m_clock = m_geo.next() - 1;
             ++m_tx_packet_count;
             auto flow_id = m_zipf.next();
             auto pkt = m_write_back_generator.set_write_back(Packet{ flow_id });
